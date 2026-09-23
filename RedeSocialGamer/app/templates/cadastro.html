@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Criar conta - GameNet
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 500px; margin: 50px auto;">
+
+
+<h1>Criar conta</h1>
+
+<div class="card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <label>
+            Nome de usuário
+        </label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Escolha seu nome de usuário"
+            required
+        >
+
+
+        <label>
+            E-mail
+        </label>
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Digite seu e-mail"
+            required
+        >
+
+
+        <label>
+            Senha
+        </label>
+
+        <input
+            type="password"
+            name="senha"
+            placeholder="Crie uma senha"
+            required
+        >
+
+
+        <button
+            type="submit"
+            class="btn"
+        >
+            Criar conta
+        </button>
+
+    </form>
+
+
+    <p style="margin-top: 20px;">
+
+        Já possui uma conta?
+
+        <a
+            href="{% url 'login' %}"
+            style="color: #8b5cf6;"
+        >
+            Entrar
+        </a>
+
+    </p>
+
+</div>
+
+
+</div>
+
+{% endblock %}

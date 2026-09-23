@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Ranking - GameNet
+{% endblock %}
+
+{% block content %}
+
+<h1>🏆 Ranking dos Jogadores</h1>
+
+<div class="card">
+
+
+<p>
+    Os jogadores são classificados de acordo com
+    a quantidade de pontos conquistados na plataforma.
+</p>
+
+
+</div>
+
+<div class="ranking">
+
+
+{% for jogador in jogadores %}
+
+    <div class="ranking-item">
+
+        <div class="posicao">
+
+            {% if forloop.counter == 1 %}
+                🥇
+            {% elif forloop.counter == 2 %}
+                🥈
+            {% elif forloop.counter == 3 %}
+                🥉
+            {% else %}
+                {{ forloop.counter }}º
+            {% endif %}
+
+        </div>
+
+
+        <div style="flex: 1;">
+
+            <a href="{% url 'perfil' jogador.id %}">
+
+                <strong>
+                    {{ jogador.usuario.username }}
+                </strong>
+
+            </a>
+
+            <br>
+
+            <small>
+                Nível {{ jogador.nivel }}
+            </small>
+
+        </div>
+
+
+        <div class="pontos">
+
+            {{ jogador.pontos }} pontos
+
+        </div>
+
+    </div>
+
+{% empty %}
+
+    <div class="card">
+
+        <p>
+            Ainda não existem jogadores no ranking.
+        </p>
+
+    </div>
+
+{% endfor %}
+
+
+</div>
+
+{% endblock %}

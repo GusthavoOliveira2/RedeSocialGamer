@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Nova publicação - GameNet
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 700px; margin: 30px auto;">
+
+
+<h1>📝 Criar publicação</h1>
+
+<div class="card">
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        {% csrf_token %}
+
+
+        <label>
+            Título
+        </label>
+
+        <input
+            type="text"
+            name="titulo"
+            placeholder="Digite o título da publicação"
+            required
+        >
+
+
+        <label>
+            Texto
+        </label>
+
+        <textarea
+            name="texto"
+            placeholder="Compartilhe algo com a comunidade..."
+            required
+        ></textarea>
+
+
+        <label>
+            Imagem
+        </label>
+
+        <input
+            type="file"
+            name="imagem"
+            accept="image/*"
+        >
+
+
+        <button
+            type="submit"
+            class="btn"
+        >
+            Publicar
+        </button>
+
+
+        <a
+            href="{% url 'inicio' %}"
+            class="btn btn-secondary"
+        >
+            Cancelar
+        </a>
+
+    </form>
+
+</div>
+
+
+</div>
+
+{% endblock %}

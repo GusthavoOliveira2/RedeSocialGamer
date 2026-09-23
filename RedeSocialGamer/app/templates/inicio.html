@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Início - GameNet
+{% endblock %}
+
+{% block content %}
+
+<h1>Publicações</h1>
+
+{% if user.is_authenticated %}
+
+
+<div style="margin-bottom: 25px;">
+    <a href="{% url 'criar_publicacao' %}" class="btn">
+        + Criar publicação
+    </a>
+</div>
+
+
+{% endif %}
+
+{% for publicacao in publicacoes %}
+
+
+<div class="publicacao">
+
+    <div class="publicacao-header">
+
+        {% if publicacao.autor.foto %}
+
+            <img
+                src="{{ publicacao.autor.foto.url }}"
+                class="avatar"
+            >
+
+        {% else %}
+
+            <div class="avatar"></div>
+
+        {% endif %}
+
+
+        <div>
+
+            <strong>
+                {{ publicacao.autor.usuario.username }}
+            </strong>
+
+            <br>
+
+            <small>
+                {{ publicacao.data_criacao|date:"d/m/Y H:i" }}
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <h2>
+        {{ publicacao.titulo }}
+    </h2>
+
+
+    <p class="publicacao-texto">
+        {{ publicacao.texto }}
+    </p>
+
+
+    {% if publicacao.imagem %}
+
+        <img
+            src="{{ publicacao.imagem.url }}"
+            class="publicacao-imagem"
+        >
+
+    {% endif %}
+
+
+    <div class="acoes">
+
+        {% if user.is_authenticated %}
+
+            <a
+                href="{% url 'curtir' publicacao.id %}"
+                class="btn"
+            >
+                ❤️ Curtir
+            </a>
+
+        {% endif %}
+
+        <span>
+            ❤️ {{ publicacao.curtidas.count }} curtidas
+        </span>
+
+    </div>
+
+
+    <div class="comentarios">
+
+        <h3>
+            💬 Comentários
+        </h3>
+
+
+        {% for comentario in publicacao.comentarios.all %}
+
+            <div class="comentario">
+
+                <strong>
+                    {{ comentario.autor.usuario.username }}
+                </strong>
+
+                <p>
+                    {{ comentario.texto }}
+                </p>
+
+            </div>
+
+        {% empty %}
+
+            <p>
+                Nenhum comentário ainda.
+            </p>
+
+        {% endfor %}
+
+
+        {% if user.is_authenticated %}
+
+            <form
+                method="POST"
+                action="{% url 'comentar' publicacao.id %}"
+            >
+
+                {% csrf_token %}
+
+                <input
+                    type="text"
+                    name="texto"
+                    placeholder="Escreva um comentário..."
+                    required
+                >
+
+                <button type="submit" class="btn">
+                    Comentar
+                </button>
+
+            </form>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% empty %}
+
+
+<div class="card">
+
+    <h2>Nenhuma publicação</h2>
+
+    <p>
+        Ainda não existem publicações na rede.
+    </p>
+
+</div>
+
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>{% block title %}GameNet{% endblock %}</title>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+
+</head>
+
+<body>
+
+
+<header>
+
+    <a href="{% url 'inicio' %}" class="logo">
+        Game<span>Net</span>
+    </a>
+
+    <nav>
+
+        {% if user.is_authenticated %}
+
+            <a href="{% url 'inicio' %}">Início</a>
+
+            <a href="{% url 'lista_jogos' %}">Jogos</a>
+
+            <a href="{% url 'ranking' %}">Ranking</a>
+
+            <a href="{% url 'perfil' user.perfil.id %}">
+                Meu Perfil
+            </a>
+
+            <a href="{% url 'criar_publicacao' %}">
+                Publicar
+            </a>
+
+            <a href="{% url 'logout' %}">
+                Sair
+            </a>
+
+        {% else %}
+
+            <a href="{% url 'login' %}">
+                Entrar
+            </a>
+
+            <a href="{% url 'cadastro' %}">
+                Criar conta
+            </a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+<main class="container">
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+
+<footer>
+
+    <p>
+        GameNet — Rede Social para Gamers
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>

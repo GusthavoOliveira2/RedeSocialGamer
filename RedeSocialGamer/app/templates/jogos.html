@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Jogos - GameNet
+{% endblock %}
+
+{% block content %}
+
+<h1>🎮 Jogos</h1>
+
+<p style="margin-bottom: 25px; color: #aaaabd;">
+    Encontre seus jogos favoritos e adicione-os ao seu perfil.
+</p>
+
+<div class="jogos">
+
+
+{% for jogo in jogos %}
+
+    <div class="jogo">
+
+        {% if jogo.capa %}
+
+            <img
+                src="{{ jogo.capa.url }}"
+                alt="{{ jogo.nome }}"
+            >
+
+        {% endif %}
+
+
+        <div class="jogo-info">
+
+            <h2>
+                {{ jogo.nome }}
+            </h2>
+
+
+            <p class="jogo-genero">
+
+                🎮 {{ jogo.genero }}
+
+            </p>
+
+
+            {% if jogo.descricao %}
+
+                <p style="color: #aaaabd; margin-bottom: 15px;">
+
+                    {{ jogo.descricao }}
+
+                </p>
+
+            {% endif %}
+
+
+            {% if user.is_authenticated %}
+
+                <a
+                    href="{% url 'adicionar_favorito' jogo.id %}"
+                    class="btn"
+                >
+                    ⭐ Favoritar
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+{% empty %}
+
+    <div class="card">
+
+        <h2>
+            Nenhum jogo cadastrado
+        </h2>
+
+        <p>
+            Ainda não existem jogos disponíveis.
+        </p>
+
+    </div>
+
+{% endfor %}
+
+
+</div>
+
+{% endblock %}

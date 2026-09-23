@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Perfil - {{ jogador.usuario.username }}
+{% endblock %}
+
+{% block content %}
+
+<div class="perfil-header">
+
+
+{% if jogador.foto %}
+
+    <img
+        src="{{ jogador.foto.url }}"
+        class="foto-perfil"
+    >
+
+{% else %}
+
+    <div class="foto-perfil"></div>
+
+{% endif %}
+
+
+<div>
+
+    <h1>
+        {{ jogador.usuario.username }}
+    </h1>
+
+    {% if jogador.bio %}
+
+        <p class="bio">
+            {{ jogador.bio }}
+        </p>
+
+    {% else %}
+
+        <p class="bio">
+            Este jogador ainda não adicionou uma biografia.
+        </p>
+
+    {% endif %}
+
+
+    <div class="stats">
+
+        <div class="stat">
+
+            ⭐ Nível:
+
+            <strong>
+                {{ jogador.nivel }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            🏆 Pontos:
+
+            <strong>
+                {{ jogador.pontos }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            🎮 Jogos:
+
+            <strong>
+                {{ jogos_favoritos.count }}
+            </strong>
+
+        </div>
+
+
+        <div class="stat">
+
+            📝 Publicações:
+
+            <strong>
+                {{ publicacoes.count }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+</div>
+
+{% if user.is_authenticated and user.perfil.id != jogador.id %}
+
+
+<div style="margin-bottom: 25px;">
+
+    <a
+        href="{% url 'enviar_amizade' jogador.id %}"
+        class="btn"
+    >
+        👥 Adicionar amigo
+    </a>
+
+</div>
+
+
+{% endif %}
+
+<div class="card">
+
+
+<h2>
+    🎮 Jogos Favoritos
+</h2>
+
+
+{% for favorito in jogos_favoritos %}
+
+    <p style="margin-bottom: 10px;">
+
+        <strong>
+            {{ favorito.jogo.nome }}
+        </strong>
+
+        — {{ favorito.jogo.genero }}
+
+    </p>
+
+{% empty %}
+
+    <p>
+        Nenhum jogo favorito cadastrado.
+    </p>
+
+{% endfor %}
+
+
+</div>
+
+<h2>
+    📝 Publicações
+</h2>
+
+{% for publicacao in publicacoes %}
+
+
+<div class="publicacao">
+
+    <h2>
+        {{ publicacao.titulo }}
+    </h2>
+
+    <p class="publicacao-texto">
+        {{ publicacao.texto }}
+    </p>
+
+
+    {% if publicacao.imagem %}
+
+        <img
+            src="{{ publicacao.imagem.url }}"
+            class="publicacao-imagem"
+        >
+
+    {% endif %}
+
+
+    <div class="acoes">
+
+        <span>
+            ❤️ {{ publicacao.curtidas.count }} curtidas
+        </span>
+
+        <span>
+            💬 {{ publicacao.comentarios.count }} comentários
+        </span>
+
+    </div>
+
+</div>
+
+
+{% empty %}
+
+
+<div class="card">
+
+    <p>
+        Este jogador ainda não publicou nada.
+    </p>
+
+</div>
+
+
+{% endfor %}
+
+{% endblock %}

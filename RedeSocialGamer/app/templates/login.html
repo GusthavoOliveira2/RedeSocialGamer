@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Login - GameNet
+{% endblock %}
+
+{% block content %}
+
+<div style="max-width: 450px; margin: 60px auto;">
+
+
+<h1>Entrar</h1>
+
+<div class="card">
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label>
+            Usuário
+        </label>
+
+        <input
+            type="text"
+            name="username"
+            placeholder="Digite seu usuário"
+            required
+        >
+
+
+        <label>
+            Senha
+        </label>
+
+        <input
+            type="password"
+            name="senha"
+            placeholder="Digite sua senha"
+            required
+        >
+
+
+        <button
+            type="submit"
+            class="btn"
+        >
+            Entrar
+        </button>
+
+    </form>
+
+
+    <p style="margin-top: 20px;">
+
+        Ainda não possui uma conta?
+
+        <a
+            href="{% url 'cadastro' %}"
+            style="color: #8b5cf6;"
+        >
+            Criar conta
+        </a>
+
+    </p>
+
+</div>
+
+
+</div>
+
+{% endblock %}
