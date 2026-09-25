@@ -5,6 +5,8 @@ from app.views import *
 
 urlpatterns = [
 
+    path('admin/', admin.site.urls),
+
     path('', views.inicio, name='inicio'),
 
     path('cadastro/', views.cadastro, name='cadastro'),
@@ -83,5 +85,22 @@ urlpatterns = [
         'ranking/',
         views.ranking,
         name='ranking'
+    ),
+    path(
+        'amizade/<int:perfil_id>/enviar/',
+        views.enviar_amizade,
+        name='enviar_amizade'
+    ),
+
+    path(
+        'amizade/<int:amizade_id>/aceitar/',
+        views.aceitar_amizade,
+        name='aceitar_amizade'
+    ),
+
+    path(
+        'amizade/<int:amizade_id>/recusar/',
+        views.recusar_amizade,
+        name='recusar_amizade'
     ),
 ]

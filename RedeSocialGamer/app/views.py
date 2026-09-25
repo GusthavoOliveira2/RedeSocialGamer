@@ -79,10 +79,28 @@ def perfil(request, id):
 
     jogos_favoritos = jogador.jogos_favoritos.all()
 
+    solicitacoes = Amizade.objects.filter(
+        destinatario=jogador,
+        status='pendente'
+    )
+
+    amigos_enviados = Amizade.objects.filter(
+        solicitante=jogador,
+        status='aceita'
+    )
+
+    amigos_recebidos = Amizade.objects.filter(
+        destinatario=jogador,
+        status='aceita'
+    )
+
     return render(request, 'perfil.html', {
         'jogador': jogador,
         'publicacoes': publicacoes,
-        'jogos_favoritos': jogos_favoritos
+        'jogos_favoritos': jogos_favoritos,
+        'solicitacoes': solicitacoes,
+        'amigos_enviados': amigos_enviados,
+        'amigos_recebidos': amigos_recebidos
     })
 
 
@@ -333,3 +351,68 @@ def lista_jogos(request):
     return render(request, 'jogos.html', {
         'jogos': jogos
     })
+
+@login_required
+def enviar_amizade(request, perfil_id):
+
+    solicitante = request.user.perfil
+
+    destinatario = get_object_or_404(
+        Perfil,
+        id=perfil_id
+    )
+
+    if solicitante != destinatario:
+
+        amizade = Amizade.objects.filter(
+            solicitante=solicitante,
+            destinatario=destinatario
+        ).first()
+
+        if not amizade:
+
+            Amizade.objects.create(
+                solicitante=solicitante,
+                destinatario=destinatario
+            )
+
+    return redirect('perfil', id=perfil_id)
+
+@login_required
+def aceitar_amizade(request, amizade_id):
+
+    amizade = get_object_or_404(
+        Amizade,
+        id=amizade_id
+    )
+
+    if amizade.destinatario == request.user.perfil:
+
+        amizade.status = 'aceita'
+        amizade.save()
+
+        amizade.solicitante.adicionar_pontos(5)
+        amizade.destinatario.adicionar_pontos(5)
+
+    return redirect(
+        'perfil',
+        id=request.user.perfil.id
+    )
+
+@login_required
+def recusar_amizade(request, amizade_id):
+
+    amizade = get_object_or_404(
+        Amizade,
+        id=amizade_id
+    )
+
+    if amizade.destinatario == request.user.perfil:
+
+        amizade.status = 'recusada'
+        amizade.save()
+
+    return redirect(
+        'perfil',
+        id=request.user.perfil.id
+    )
