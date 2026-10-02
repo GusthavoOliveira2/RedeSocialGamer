@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Encontrar Jogadores
+{% endblock %}
+
+{% block content %}
+
+<div class="card">
+
+<h1>🎮 Encontrar Jogadores</h1>
+
+<p>
+    Procure outros jogadores e envie uma solicitação de amizade.
+</p>
+
+<form method="GET" style="margin-top: 20px;">
+
+    <input
+        type="text"
+        name="busca"
+        value="{{ busca }}"
+        placeholder="Digite o nome do jogador..."
+        style="width: 70%;"
+    >
+
+    <button
+        type="submit"
+        class="btn"
+    >
+        🔍 Buscar
+    </button>
+
+</form>
+
+
+</div>
+
+{% if busca %}
+
+
+<h2>
+    Resultados para: "{{ busca }}"
+</h2>
+
+
+{% else %}
+
+
+<h2>
+    Jogadores
+</h2>
+
+
+{% endif %}
+
+<div class="jogadores-grid">
+
+
+{% for jogador in jogadores %}
+
+    <div class="card jogador-card">
+
+        {% if jogador.foto %}
+
+            <img
+                src="{{ jogador.foto.url }}"
+                alt="Foto de {{ jogador.usuario.username }}"
+                class="foto-perfil"
+            >
+
+        {% else %}
+
+            <div class="foto-perfil"></div>
+
+        {% endif %}
+
+
+        <h2>
+            {{ jogador.usuario.username }}
+        </h2>
+
+
+        {% if jogador.bio %}
+
+            <p>
+                {{ jogador.bio }}
+            </p>
+
+        {% else %}
+
+            <p>
+                Este jogador ainda não possui uma biografia.
+            </p>
+
+        {% endif %}
+
+
+        <p>
+            ⭐ Nível:
+            <strong>{{ jogador.nivel }}</strong>
+        </p>
+
+
+        <p>
+            🏆 Pontos:
+            <strong>{{ jogador.pontos }}</strong>
+        </p>
+
+
+        <div style="margin-top: 15px;">
+
+            <a
+                href="{% url 'perfil' jogador.id %}"
+                class="btn"
+            >
+                👤 Ver perfil
+            </a>
+
+
+            <a
+                href="{% url 'enviar_amizade' jogador.id %}"
+                class="btn"
+            >
+                👥 Adicionar amigo
+            </a>
+
+        </div>
+
+    </div>
+
+{% empty %}
+
+    <div class="card">
+
+        <h2>
+            😕 Nenhum jogador encontrado
+        </h2>
+
+        <p>
+            Não encontramos nenhum jogador com esse nome.
+        </p>
+
+    </div>
+
+{% endfor %}
+
+
+</div>
+
+{% endblock %}

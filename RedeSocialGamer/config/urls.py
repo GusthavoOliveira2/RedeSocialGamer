@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.urls import include, path
 from app import views
 from app.views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 
@@ -20,6 +22,11 @@ urlpatterns = [
         views.perfil,
         name='perfil'
     ),
+    path(
+        'jogadores/',
+        views.buscar_jogadores,
+        name='buscar_jogadores'
+),
 
     path(
         'publicacao/criar/',
@@ -103,4 +110,13 @@ urlpatterns = [
         views.recusar_amizade,
         name='recusar_amizade'
     ),
+    path(
+        'jogos/cadastrar/', 
+        views.cadastrar_jogo, 
+        name='cadastrar_jogo'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

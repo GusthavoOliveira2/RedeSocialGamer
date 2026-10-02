@@ -1,92 +1,452 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Jogos - GameNet
-{% endblock %}
-
 {% block content %}
 
-<h1>🎮 Jogos</h1>
+<style>
 
-<p style="margin-bottom: 25px; color: #aaaabd;">
-    Encontre seus jogos favoritos e adicione-os ao seu perfil.
-</p>
+    .jogos-container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
 
-<div class="jogos">
+    .cabecalho-jogos {
+        text-align: center;
+        margin-bottom: 40px;
+    }
 
+    .cabecalho-jogos h1 {
+        color: #ffffff;
+        font-size: 38px;
+        margin-bottom: 10px;
+    }
 
-{% for jogo in jogos %}
-
-    <div class="jogo">
-
-        {% if jogo.capa %}
-
-            <img
-                src="{{ jogo.capa.url }}"
-                alt="{{ jogo.nome }}"
-            >
-
-        {% endif %}
-
-
-        <div class="jogo-info">
-
-            <h2>
-                {{ jogo.nome }}
-            </h2>
+    .cabecalho-jogos p {
+        color: #aaa;
+        font-size: 16px;
+    }
 
 
-            <p class="jogo-genero">
+    /* CADASTRO */
 
-                🎮 {{ jogo.genero }}
+    .cadastro-jogo {
+        background: #19142d;
+        border: 1px solid #39275e;
+        border-radius: 18px;
+        padding: 30px;
+        margin-bottom: 45px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+    }
 
-            </p>
+    .cadastro-jogo h2 {
+        color: #ffffff;
+        margin-top: 0;
+        margin-bottom: 25px;
+        font-size: 24px;
+    }
+
+    .campo {
+        margin-bottom: 20px;
+    }
+
+    .campo label {
+        display: block;
+        color: #ffffff;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .campo input[type="text"],
+    .campo textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 13px;
+        border-radius: 9px;
+        border: 1px solid #49376c;
+        background: #100d1c;
+        color: #ffffff;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .campo input[type="text"]:focus,
+    .campo textarea:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 8px rgba(139, 92, 246, 0.25);
+    }
+
+    .campo textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .campo input[type="file"] {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px;
+        border-radius: 9px;
+        border: 1px dashed #63459a;
+        background: #100d1c;
+        color: #aaa;
+        cursor: pointer;
+    }
+
+    .campo small {
+        display: block;
+        color: #777;
+        margin-top: 6px;
+    }
 
 
-            {% if jogo.descricao %}
+    /* BOTÃO */
 
-                <p style="color: #aaaabd; margin-bottom: 15px;">
+    .btn-cadastrar {
+        border: none;
+        border-radius: 9px;
+        padding: 13px 22px;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
 
-                    {{ jogo.descricao }}
-
-                </p>
-
-            {% endif %}
-
-
-            {% if user.is_authenticated %}
-
-                <a
-                    href="{% url 'adicionar_favorito' jogo.id %}"
-                    class="btn"
-                >
-                    ⭐ Favoritar
-                </a>
-
-            {% endif %}
-
-        </div>
-
-    </div>
+    .btn-cadastrar:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+    }
 
 
-{% empty %}
+    /* TÍTULO DA LISTA */
 
-    <div class="card">
+    .titulo-lista {
+        color: #ffffff;
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
 
-        <h2>
-            Nenhum jogo cadastrado
-        </h2>
+
+    /* GRID */
+
+    .lista-jogos {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        gap: 25px;
+    }
+
+
+    /* CARD */
+
+    .jogo-card {
+        background: #19142d;
+        border: 1px solid #39275e;
+        border-radius: 16px;
+        overflow: hidden;
+        transition: 0.3s;
+    }
+
+    .jogo-card:hover {
+        transform: translateY(-5px);
+        border-color: #7c3aed;
+        box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+    }
+
+
+    /* CAPA */
+
+    .capa-jogo {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .sem-capa {
+        width: 100%;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #100d1c;
+        color: #777;
+        font-size: 55px;
+    }
+
+
+    /* INFORMAÇÕES */
+
+    .jogo-info {
+        padding: 20px;
+    }
+
+    .jogo-info h3 {
+        color: #ffffff;
+        font-size: 21px;
+        margin: 0 0 10px 0;
+    }
+
+    .jogo-info p {
+        color: #aaa;
+        font-size: 14px;
+        line-height: 1.5;
+        min-height: 45px;
+    }
+
+
+    /* BOTÃO FAVORITO */
+
+    .btn-favorito {
+        display: block;
+        text-align: center;
+        padding: 10px;
+        margin-top: 15px;
+        border-radius: 8px;
+        background: #4c1d95;
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn-favorito:hover {
+        background: #6d28d9;
+    }
+
+
+    /* NENHUM JOGO */
+
+    .nenhum-jogo {
+        text-align: center;
+        background: #19142d;
+        border: 1px solid #39275e;
+        border-radius: 15px;
+        padding: 50px 20px;
+    }
+
+    .nenhum-jogo h2 {
+        color: #ffffff;
+    }
+
+    .nenhum-jogo p {
+        color: #888;
+    }
+
+
+    /* RESPONSIVO */
+
+    @media (max-width: 600px) {
+
+        .jogos-container {
+            padding: 0 12px;
+        }
+
+        .cabecalho-jogos h1 {
+            font-size: 30px;
+        }
+
+        .cadastro-jogo {
+            padding: 20px;
+        }
+
+        .lista-jogos {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+</style>
+
+
+<div class="jogos-container">
+
+
+    <!-- CABEÇALHO -->
+
+    <div class="cabecalho-jogos">
+
+        <h1>🎮 Jogos</h1>
 
         <p>
-            Ainda não existem jogos disponíveis.
+            Encontre seus jogos favoritos ou cadastre novos jogos para a comunidade.
         </p>
 
     </div>
 
-{% endfor %}
+
+    <!-- CADASTRAR JOGO -->
+
+    <div class="cadastro-jogo">
+
+        <h2>➕ Cadastrar novo jogo</h2>
+
+        <form
+            method="POST"
+            action="{% url 'cadastrar_jogo' %}"
+            enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="campo">
+
+                <label for="nome">
+                    🎮 Nome do jogo
+                </label>
+
+                <input
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    placeholder="Ex: Minecraft"
+                    required
+                >
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="descricao">
+                    📝 Descrição
+                </label>
+
+                <textarea
+                    id="descricao"
+                    name="descricao"
+                    placeholder="Digite uma descrição do jogo..."
+                ></textarea>
+
+            </div>
+
+
+            <div class="campo">
+
+                <label for="capa">
+                    🖼️ Capa do jogo
+                </label>
+
+                <input
+                    type="file"
+                    id="capa"
+                    name="capa"
+                    accept="image/*"
+                >
+
+                <small>
+                    Escolha uma imagem para ser usada como capa do jogo.
+                </small>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn-cadastrar"
+            >
+                ➕ Cadastrar jogo
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- LISTA DE JOGOS -->
+
+    <h2 class="titulo-lista">
+        🎮 Jogos cadastrados
+    </h2>
+
+
+    {% if jogos %}
+
+        <div class="lista-jogos">
+
+            {% for jogo in jogos %}
+
+                <div class="jogo-card">
+
+
+                    <!-- CAPA -->
+
+                    {% if jogo.capa %}
+
+                        <img
+                            src="{{ jogo.capa.url }}"
+                            alt="Capa de {{ jogo.nome }}"
+                            class="capa-jogo"
+                        >
+
+                    {% else %}
+
+                        <div class="sem-capa">
+                            🎮
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- INFORMAÇÕES -->
+
+                    <div class="jogo-info">
+
+                        <h3>
+                            {{ jogo.nome }}
+                        </h3>
+
+
+                        {% if jogo.descricao %}
+
+                            <p>
+                                {{ jogo.descricao }}
+                            </p>
+
+                        {% else %}
+
+                            <p>
+                                Nenhuma descrição cadastrada.
+                            </p>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'adicionar_favorito' jogo.id %}"
+                            class="btn-favorito"
+                        >
+                            ⭐ Adicionar aos favoritos
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="nenhum-jogo">
+
+            <h2>
+                🎮 Nenhum jogo cadastrado
+            </h2>
+
+            <p>
+                Seja o primeiro a cadastrar um jogo!
+            </p>
+
+        </div>
+
+    {% endif %}
 
 
 </div>
 
 {% endblock %}
+
+
+

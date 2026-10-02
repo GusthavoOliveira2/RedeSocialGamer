@@ -14,12 +14,16 @@ def inicio(request):
 
 
 def cadastro(request):
-
     if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        senha = request.POST.get('senha')
+        foto = request.FILES.get('foto')
 
-        username = request.POST['username']
-        email = request.POST['email']
-        senha = request.POST['senha']
+        if User.objects.filter(username=username).exists():
+            return render(request, 'cadastro.html', {
+                'erro': 'Este nome de usuário já existe.'
+            })
 
         usuario = User.objects.create_user(
             username=username,
@@ -27,9 +31,9 @@ def cadastro(request):
             password=senha
         )
 
-        Perfil.objects.create(
-            usuario=usuario
-        )
+        perfil = usuario.perfil
+        perfil.foto = foto
+        perfil.save()
 
         return redirect('login')
 
@@ -416,3 +420,44 @@ def recusar_amizade(request, amizade_id):
         'perfil',
         id=request.user.perfil.id
     )
+
+@login_required
+def buscar_jogadores(request):
+
+    busca = request.GET.get('busca', '')
+
+    jogadores = Perfil.objects.exclude(
+        id=request.user.perfil.id
+    )
+
+    if busca:
+        jogadores = jogadores.filter(
+            usuario__username__icontains=busca
+        )
+
+    return render(
+        request,
+        'buscar_jogadores.html',
+        {
+            'jogadores': jogadores,
+            'busca': busca
+        }
+    )
+
+@login_required
+def cadastrar_jogo(request):
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        descricao = request.POST.get('descricao')
+        capa = request.FILES.get('capa')
+
+        if nome:
+            Jogo.objects.create(
+                nome=nome,
+                descricao=descricao,
+                capa=capa
+            )
+
+        return redirect('lista_jogos')
+
+    return redirect('lista_jogos')

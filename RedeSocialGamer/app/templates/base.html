@@ -5,87 +5,878 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>{% block title %}GameNet{% endblock %}</title>
 
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>
+    {% block title %}
+        Rede Social Gamer
+    {% endblock %}
+</title>
+
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/style.css' %}"
+>
+
+
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+
+    body {
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #111827,
+                #1e1b4b
+            );
+
+        color: #f1f5f9;
+
+        min-height: 100vh;
+
+    }
+
+
+    /* NAVBAR */
+
+    nav {
+
+        width: 100%;
+
+        background: rgba(15, 23, 42, 0.95);
+
+        border-bottom:
+            1px solid
+            rgba(139, 92, 246, 0.4);
+
+        padding: 15px 40px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        position: sticky;
+
+        top: 0;
+
+        z-index: 1000;
+
+        backdrop-filter: blur(10px);
+
+    }
+
+
+    .logo {
+
+        font-size: 24px;
+
+        font-weight: bold;
+
+        color: #a78bfa;
+
+        text-decoration: none;
+
+        white-space: nowrap;
+
+    }
+
+
+    .logo span {
+
+        color: #22d3ee;
+
+    }
+
+
+    .menu {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+    }
+
+
+    .menu a {
+
+        color: #e2e8f0;
+
+        text-decoration: none;
+
+        padding: 10px 14px;
+
+        border-radius: 8px;
+
+        transition: 0.2s;
+
+        font-size: 14px;
+
+    }
+
+
+    .menu a:hover {
+
+        background: #312e81;
+
+        color: white;
+
+    }
+
+
+    .menu .sair {
+
+        background: #dc2626;
+
+        color: white;
+
+    }
+
+
+    .menu .sair:hover {
+
+        background: #b91c1c;
+
+    }
+
+
+    /* CONTEÚDO */
+
+    main {
+
+        width: 90%;
+
+        max-width: 1200px;
+
+        margin: 40px auto;
+
+        min-height: calc(100vh - 150px);
+
+    }
+
+
+    /* CARDS */
+
+    .card {
+
+        background: rgba(30, 41, 59, 0.9);
+
+        border:
+
+            1px solid
+
+            rgba(139, 92, 246, 0.25);
+
+        border-radius: 15px;
+
+        padding: 25px;
+
+        margin-bottom: 25px;
+
+        box-shadow:
+            0 10px 30px
+            rgba(0, 0, 0, 0.25);
+
+    }
+
+
+    .card h1,
+    .card h2,
+    .card h3 {
+
+        margin-bottom: 15px;
+
+    }
+
+
+    /* BOTÕES */
+
+    .btn {
+
+        display: inline-block;
+
+        padding: 10px 16px;
+
+        border-radius: 8px;
+
+        border: none;
+
+        background: #7c3aed;
+
+        color: white;
+
+        text-decoration: none;
+
+        cursor: pointer;
+
+        font-weight: bold;
+
+        transition: 0.2s;
+
+    }
+
+
+    .btn:hover {
+
+        background: #6d28d9;
+
+        transform: translateY(-1px);
+
+    }
+
+
+    .btn-danger {
+
+        background: #dc2626;
+
+    }
+
+
+    .btn-danger:hover {
+
+        background: #b91c1c;
+
+    }
+
+
+    /* FORMULÁRIOS */
+
+    input,
+    textarea,
+    select {
+
+        width: 100%;
+
+        padding: 12px;
+
+        margin-top: 8px;
+
+        margin-bottom: 15px;
+
+        border-radius: 8px;
+
+        border:
+
+            1px solid
+            #475569;
+
+        background: #0f172a;
+
+        color: #f8fafc;
+
+        outline: none;
+
+    }
+
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+
+        border-color: #8b5cf6;
+
+    }
+
+
+    textarea {
+
+        min-height: 120px;
+
+        resize: vertical;
+
+    }
+
+
+    /* PERFIL */
+
+    .perfil-header {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 25px;
+
+        background:
+            rgba(30, 41, 59, 0.9);
+
+        padding: 30px;
+
+        border-radius: 15px;
+
+        margin-bottom: 25px;
+
+        border:
+            1px solid
+            rgba(139, 92, 246, 0.25);
+
+    }
+
+
+    .foto-perfil {
+
+        width: 130px;
+
+        height: 130px;
+
+        border-radius: 50%;
+
+        object-fit: cover;
+
+        background:
+            linear-gradient(
+                135deg,
+                #7c3aed,
+                #06b6d4
+            );
+
+        flex-shrink: 0;
+
+    }
+
+
+    .avatar {
+
+        width: 50px;
+
+        height: 50px;
+
+        border-radius: 50%;
+
+        object-fit: cover;
+
+        background:
+            linear-gradient(
+                135deg,
+                #7c3aed,
+                #06b6d4
+            );
+
+    }
+
+
+    .bio {
+
+        color: #cbd5e1;
+
+        margin: 10px 0 20px 0;
+
+    }
+
+
+    .stats {
+
+        display: flex;
+
+        gap: 15px;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .stat {
+
+        background: #0f172a;
+
+        padding: 10px 15px;
+
+        border-radius: 8px;
+
+        color: #cbd5e1;
+
+    }
+
+
+    .stat strong {
+
+        color: #22d3ee;
+
+    }
+
+
+    /* PUBLICAÇÕES */
+
+    .publicacao {
+
+        background:
+            rgba(30, 41, 59, 0.9);
+
+        border-radius: 15px;
+
+        padding: 25px;
+
+        margin-bottom: 25px;
+
+        border:
+            1px solid
+            rgba(139, 92, 246, 0.2);
+
+    }
+
+
+    .publicacao-header {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        margin-bottom: 20px;
+
+    }
+
+
+    .publicacao-header small {
+
+        color: #94a3b8;
+
+    }
+
+
+    .publicacao-texto {
+
+        color: #e2e8f0;
+
+        line-height: 1.7;
+
+        margin: 15px 0;
+
+    }
+
+
+    .publicacao-imagem {
+
+        width: 100%;
+
+        max-height: 500px;
+
+        object-fit: cover;
+
+        border-radius: 10px;
+
+        margin: 15px 0;
+
+    }
+
+
+    .acoes {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 15px;
+
+        flex-wrap: wrap;
+
+        margin-top: 15px;
+
+        padding-top: 15px;
+
+        border-top:
+            1px solid
+            #334155;
+
+    }
+
+
+    /* COMENTÁRIOS */
+
+    .comentarios {
+
+        margin-top: 25px;
+
+        padding-top: 20px;
+
+        border-top:
+            1px solid
+            #334155;
+
+    }
+
+
+    .comentario {
+
+        background: #0f172a;
+
+        padding: 15px;
+
+        border-radius: 8px;
+
+        margin-top: 10px;
+
+    }
+
+
+    .comentario strong {
+
+        color: #a78bfa;
+
+    }
+
+
+    /* JOGADORES */
+
+    .jogadores-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                auto-fit,
+                minmax(250px, 1fr)
+            );
+
+        gap: 20px;
+
+    }
+
+
+    .jogador-card {
+
+        text-align: center;
+
+    }
+
+
+    .jogador-card .foto-perfil {
+
+        margin: 0 auto 15px auto;
+
+    }
+
+
+    .jogador-card p {
+
+        color: #cbd5e1;
+
+        margin: 8px 0;
+
+    }
+
+
+    .jogador-card .btn {
+
+        margin: 5px;
+
+    }
+
+
+    /* TÍTULOS */
+
+    h1,
+    h2,
+    h3 {
+
+        color: #f8fafc;
+
+    }
+
+
+    h1 {
+
+        font-size: 32px;
+
+    }
+
+
+    h2 {
+
+        font-size: 24px;
+
+    }
+
+
+    /* LINKS */
+
+    a {
+
+        color: #22d3ee;
+
+    }
+
+
+    /* MENSAGENS */
+
+    .mensagem {
+
+        padding: 15px;
+
+        margin-bottom: 20px;
+
+        border-radius: 8px;
+
+        background: #1e293b;
+
+    }
+
+
+    /* RODAPÉ */
+
+    footer {
+
+        text-align: center;
+
+        padding: 25px;
+
+        margin-top: 40px;
+
+        color: #64748b;
+
+        border-top:
+            1px solid
+            rgba(139, 92, 246, 0.2);
+
+    }
+
+
+    /* RESPONSIVIDADE */
+
+    @media (max-width: 900px) {
+
+        nav {
+
+            flex-direction: column;
+
+            gap: 15px;
+
+            padding: 15px;
+
+        }
+
+
+        .menu {
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        .perfil-header {
+
+            flex-direction: column;
+
+            text-align: center;
+
+        }
+
+
+        .stats {
+
+            justify-content: center;
+
+        }
+
+    }
+
+
+    @media (max-width: 600px) {
+
+        main {
+
+            width: 94%;
+
+            margin: 25px auto;
+
+        }
+
+
+        .menu a {
+
+            font-size: 13px;
+
+            padding: 8px 10px;
+
+        }
+
+
+        .perfil-header {
+
+            padding: 20px;
+
+        }
+
+
+        .foto-perfil {
+
+            width: 100px;
+
+            height: 100px;
+
+        }
+
+
+        h1 {
+
+            font-size: 26px;
+
+        }
+
+
+        h2 {
+
+            font-size: 21px;
+
+        }
+
+
+        .btn {
+
+            width: 100%;
+
+            text-align: center;
+
+        }
+
+    }
+
+</style>
+
 
 </head>
 
 <body>
 
-<header>
 
-    <a href="{% url 'inicio' %}" class="logo">
-        Game<span>Net</span>
+<!-- MENU -->
+
+<nav>
+
+    <a
+        href="{% url 'inicio' %}"
+        class="logo"
+    >
+        🎮 Game<span>Net</span>
     </a>
 
-    <nav>
 
-        {% if user.is_authenticated %}
+    {% if user.is_authenticated %}
+
+        <div class="menu">
 
             <a href="{% url 'inicio' %}">
-                Início
+                🏠 Início
             </a>
+
 
             <a href="{% url 'lista_jogos' %}">
-                Jogos
+                🎮 Jogos
             </a>
+
 
             <a href="{% url 'ranking' %}">
-                Ranking
+                🏆 Ranking
             </a>
+
+
+            <a href="{% url 'buscar_jogadores' %}">
+                👥 Encontrar Jogadores
+            </a>
+
 
             {% if user.perfil %}
-
                 <a href="{% url 'perfil' user.perfil.id %}">
-                    Meu Perfil
+                    👤 Meu Perfil
                 </a>
-
             {% endif %}
 
+
             <a href="{% url 'criar_publicacao' %}">
-                Publicar
+                ✏️ Publicar
             </a>
 
-            <a href="{% url 'logout' %}">
-                Sair
+
+            <a
+                href="{% url 'logout' %}"
+                class="sair"
+            >
+                🚪 Sair
             </a>
 
-        {% else %}
+        </div>
+
+    {% else %}
+
+        <div class="menu">
 
             <a href="{% url 'login' %}">
-                Entrar
+                🔑 Entrar
             </a>
+
 
             <a href="{% url 'cadastro' %}">
-                Criar conta
+                📝 Criar conta
             </a>
 
-        {% endif %}
+        </div>
 
-    </nav>
+    {% endif %}
 
-</header>
+</nav>
 
 
-<main class="container">
+<!-- CONTEÚDO -->
+
+<main>
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="mensagem">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
 
     {% block content %}
+
     {% endblock %}
 
 </main>
 
 
+<!-- RODAPÉ -->
+
 <footer>
 
     <p>
-        GameNet — Rede Social para Gamers
+        🎮 Rede Social Gamer
+    </p>
+
+    <p>
+        Conecte-se, compartilhe e jogue.
     </p>
 
 </footer>
+
 
 </body>
 

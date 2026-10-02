@@ -1,85 +1,305 @@
+html
 {% extends 'base.html' %}
-
-{% block title %}
-Criar conta - GameNet
-{% endblock %}
 
 {% block content %}
 
-<div style="max-width: 500px; margin: 50px auto;">
+<style>
+
+    .cadastro-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 35px;
+        background: rgba(25, 20, 45, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 0 25px rgba(130, 70, 255, 0.35);
+        border: 1px solid rgba(150, 100, 255, 0.25);
+    }
+
+    .cadastro-container h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        color: #ffffff;
+        font-size: 32px;
+    }
+
+    .cadastro-subtitulo {
+        text-align: center;
+        color: #aaa;
+        margin-bottom: 30px;
+    }
+
+    .campo {
+        margin-bottom: 20px;
+    }
+
+    .campo label {
+        display: block;
+        margin-bottom: 8px;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .campo input[type="text"],
+    .campo input[type="email"],
+    .campo input[type="password"] {
+        width: 100%;
+        padding: 13px;
+        box-sizing: border-box;
+        border: 1px solid #4b3b70;
+        border-radius: 10px;
+        background: #171326;
+        color: white;
+        font-size: 15px;
+        outline: none;
+    }
+
+    .campo input[type="text"]:focus,
+    .campo input[type="email"]:focus,
+    .campo input[type="password"]:focus {
+        border-color: #9b5cff;
+        box-shadow: 0 0 8px rgba(155, 92, 255, 0.3);
+    }
+
+    .campo input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        box-sizing: border-box;
+        border: 1px dashed #6d4db3;
+        border-radius: 10px;
+        background: #171326;
+        color: #ccc;
+        cursor: pointer;
+    }
+
+    .campo small {
+        display: block;
+        margin-top: 7px;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .preview-container {
+        text-align: center;
+        margin: 20px 0;
+    }
+
+    .preview-container img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 3px solid #8b5cf6;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        display: none;
+    }
+
+    .botao-cadastro {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .botao-cadastro:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .login-link {
+        text-align: center;
+        margin-top: 25px;
+        color: #aaa;
+    }
+
+    .login-link a {
+        color: #a855f7;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .login-link a:hover {
+        text-decoration: underline;
+    }
+
+    .erro {
+        background: rgba(220, 38, 38, 0.15);
+        border: 1px solid #dc2626;
+        color: #ff6b6b;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+</style>
 
 
-<h1>Criar conta</h1>
+<div class="cadastro-container">
 
-<div class="card">
+    <h1>🎮 Criar Conta</h1>
 
-    <form method="POST">
+    <p class="cadastro-subtitulo">
+        Entre para a comunidade gamer!
+    </p>
+
+
+    {% if erro %}
+        <div class="erro">
+            {{ erro }}
+        </div>
+    {% endif %}
+
+
+    <form method="POST" enctype="multipart/form-data">
 
         {% csrf_token %}
 
 
-        <label>
-            Nome de usuário
-        </label>
+        <div class="campo">
 
-        <input
-            type="text"
-            name="username"
-            placeholder="Escolha seu nome de usuário"
-            required
-        >
+            <label for="username">
+                👤 Nome de usuário
+            </label>
 
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Digite seu nome de usuário"
+                required
+            >
 
-        <label>
-            E-mail
-        </label>
-
-        <input
-            type="email"
-            name="email"
-            placeholder="Digite seu e-mail"
-            required
-        >
+        </div>
 
 
-        <label>
-            Senha
-        </label>
+        <div class="campo">
 
-        <input
-            type="password"
-            name="senha"
-            placeholder="Crie uma senha"
-            required
-        >
+            <label for="email">
+                📧 E-mail
+            </label>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Digite seu e-mail"
+                required
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="senha">
+                🔒 Senha
+            </label>
+
+            <input
+                type="password"
+                id="senha"
+                name="senha"
+                placeholder="Digite sua senha"
+                required
+            >
+
+        </div>
+
+
+        <div class="campo">
+
+            <label for="foto">
+                🖼️ Foto de perfil
+            </label>
+
+            <input
+                type="file"
+                id="foto"
+                name="foto"
+                accept="image/*"
+            >
+
+            <small>
+                Escolha uma imagem para usar como sua foto de perfil.
+            </small>
+
+        </div>
+
+
+        <div class="preview-container">
+
+            <img
+                id="preview"
+                src="#"
+                alt="Pré-visualização da foto"
+            >
+
+        </div>
 
 
         <button
             type="submit"
-            class="btn"
+            class="botao-cadastro"
         >
-            Criar conta
+            🚀 Criar minha conta
         </button>
 
     </form>
 
 
-    <p style="margin-top: 20px;">
+    <div class="login-link">
 
         Já possui uma conta?
 
-        <a
-            href="{% url 'login' %}"
-            style="color: #8b5cf6;"
-        >
+        <a href="{% url 'login' %}">
             Entrar
         </a>
 
-    </p>
+    </div>
 
 </div>
 
 
-</div>
+<script>
+
+    const foto = document.getElementById('foto');
+    const preview = document.getElementById('preview');
+
+    foto.addEventListener('change', function() {
+
+        if (this.files && this.files[0]) {
+
+            const arquivo = this.files[0];
+
+            const leitor = new FileReader();
+
+            leitor.onload = function(e) {
+
+                preview.src = e.target.result;
+                preview.style.display = 'inline-block';
+
+            };
+
+            leitor.readAsDataURL(arquivo);
+
+        } else {
+
+            preview.src = '#';
+            preview.style.display = 'none';
+
+        }
+
+    });
+
+</script>
 
 {% endblock %}
+
+
