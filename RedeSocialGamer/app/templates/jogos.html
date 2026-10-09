@@ -3,7 +3,6 @@
 {% block content %}
 
 <style>
-
     .jogos-container {
         max-width: 1200px;
         margin: 40px auto;
@@ -12,7 +11,7 @@
 
     .cabecalho-jogos {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
     }
 
     .cabecalho-jogos h1 {
@@ -26,10 +25,31 @@
         font-size: 16px;
     }
 
+    /* BOTÃO PARA ABRIR O CADASTRO */
 
-    /* CADASTRO */
+    .btn-abrir-cadastro {
+        display: block;
+        margin: 0 auto 30px;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-abrir-cadastro:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+    }
+
+    /* CADASTRO DE JOGOS */
 
     .cadastro-jogo {
+        display: none;
         background: #19142d;
         border: 1px solid #39275e;
         border-radius: 18px;
@@ -38,11 +58,25 @@
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
     }
 
+    .cadastro-jogo.aberto {
+        display: block;
+    }
+
     .cadastro-jogo h2 {
         color: #ffffff;
         margin-top: 0;
         margin-bottom: 25px;
         font-size: 24px;
+    }
+
+    .formulario-jogo {
+        width: 100%;
+        max-width: none;
+        padding: 0;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
     }
 
     .campo {
@@ -61,6 +95,7 @@
         width: 100%;
         box-sizing: border-box;
         padding: 13px;
+        margin-bottom: 0;
         border-radius: 9px;
         border: 1px solid #49376c;
         background: #100d1c;
@@ -84,6 +119,7 @@
         width: 100%;
         box-sizing: border-box;
         padding: 12px;
+        margin-bottom: 0;
         border-radius: 9px;
         border: 1px dashed #63459a;
         background: #100d1c;
@@ -93,12 +129,11 @@
 
     .campo small {
         display: block;
-        color: #777;
+        color: #888;
         margin-top: 6px;
     }
 
-
-    /* BOTÃO */
+    /* BOTÃO DE CADASTRO */
 
     .btn-cadastrar {
         border: none;
@@ -117,8 +152,7 @@
         box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
     }
 
-
-    /* TÍTULO DA LISTA */
+    /* LISTA DE JOGOS */
 
     .titulo-lista {
         color: #ffffff;
@@ -126,17 +160,13 @@
         margin-bottom: 25px;
     }
 
-
-    /* GRID */
-
     .lista-jogos {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
         gap: 25px;
     }
 
-
-    /* CARD */
+    /* CARDS */
 
     .jogo-card {
         background: #19142d;
@@ -144,6 +174,7 @@
         border-radius: 16px;
         overflow: hidden;
         transition: 0.3s;
+        min-width: 0;
     }
 
     .jogo-card:hover {
@@ -151,9 +182,6 @@
         border-color: #7c3aed;
         box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
     }
-
-
-    /* CAPA */
 
     .capa-jogo {
         width: 100%;
@@ -173,9 +201,6 @@
         font-size: 55px;
     }
 
-
-    /* INFORMAÇÕES */
-
     .jogo-info {
         padding: 20px;
     }
@@ -183,29 +208,55 @@
     .jogo-info h3 {
         color: #ffffff;
         font-size: 21px;
-        margin: 0 0 10px 0;
+        margin: 0 0 12px;
+        overflow-wrap: anywhere;
     }
 
     .jogo-info p {
         color: #aaa;
         font-size: 14px;
         line-height: 1.5;
-        min-height: 45px;
+        margin: 8px 0;
+        overflow-wrap: anywhere;
     }
 
+    .genero-jogo {
+        display: inline-block;
+        background: #352052;
+        color: #d8b4fe !important;
+        padding: 5px 10px;
+        border-radius: 6px;
+        margin-bottom: 8px !important;
+    }
 
-    /* BOTÃO FAVORITO */
+    /* BOTÕES DE FAVORITOS */
+
+    .form-favorito {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        border: none;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
 
     .btn-favorito {
         display: block;
+        width: 100%;
+        box-sizing: border-box;
         text-align: center;
         padding: 10px;
         margin-top: 15px;
+        border: none;
         border-radius: 8px;
         background: #4c1d95;
         color: #ffffff;
         text-decoration: none;
         font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
         transition: 0.3s;
     }
 
@@ -213,8 +264,15 @@
         background: #6d28d9;
     }
 
+    .btn-remover {
+        background: #7f1d1d;
+    }
 
-    /* NENHUM JOGO */
+    .btn-remover:hover {
+        background: #b91c1c;
+    }
+
+    /* LISTA VAZIA */
 
     .nenhum-jogo {
         text-align: center;
@@ -229,14 +287,27 @@
     }
 
     .nenhum-jogo p {
-        color: #888;
+        color: #999;
     }
 
+    /* MENSAGENS */
 
-    /* RESPONSIVO */
+    .mensagens {
+        margin-bottom: 25px;
+    }
+
+    .mensagem {
+        padding: 14px 18px;
+        border-radius: 9px;
+        margin-bottom: 10px;
+        color: #ffffff;
+        background: #352052;
+        border: 1px solid #63459a;
+    }
+
+    /* TELAS MENORES */
 
     @media (max-width: 600px) {
-
         .jogos-container {
             padding: 0 12px;
         }
@@ -253,30 +324,51 @@
             grid-template-columns: 1fr;
         }
 
+        .btn-abrir-cadastro {
+            width: 100%;
+        }
     }
-
 </style>
 
-
 <div class="jogos-container">
-
 
     <!-- CABEÇALHO -->
 
     <div class="cabecalho-jogos">
-
         <h1>🎮 Jogos</h1>
 
         <p>
             Encontre seus jogos favoritos ou cadastre novos jogos para a comunidade.
         </p>
-
     </div>
 
+    <!-- MENSAGENS DO SISTEMA -->
 
-    <!-- CADASTRAR JOGO -->
+    {% if messages %}
+        <div class="mensagens">
+            {% for message in messages %}
+                <div class="mensagem">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 
-    <div class="cadastro-jogo">
+    <!-- BOTÃO PARA ABRIR E FECHAR O FORMULÁRIO -->
+
+    <button
+        type="button"
+        id="btnAbrirCadastro"
+        class="btn-abrir-cadastro"
+        aria-expanded="false"
+        aria-controls="formularioCadastro"
+    >
+        ➕ Cadastrar novo jogo
+    </button>
+
+    <!-- FORMULÁRIO DE CADASTRO -->
+
+    <div class="cadastro-jogo" id="formularioCadastro">
 
         <h2>➕ Cadastrar novo jogo</h2>
 
@@ -284,48 +376,48 @@
             method="POST"
             action="{% url 'cadastrar_jogo' %}"
             enctype="multipart/form-data"
+            class="formulario-jogo"
         >
-
             {% csrf_token %}
 
-
             <div class="campo">
-
-                <label for="nome">
-                    🎮 Nome do jogo
-                </label>
+                <label for="nome">🎮 Nome do jogo</label>
 
                 <input
                     type="text"
                     id="nome"
                     name="nome"
                     placeholder="Ex: Minecraft"
+                    maxlength="100"
                     required
                 >
-
             </div>
 
+            <div class="campo">
+                <label for="genero">🎯 Gênero do jogo</label>
+
+                <input
+                    type="text"
+                    id="genero"
+                    name="genero"
+                    placeholder="Ex: Ação, Aventura, RPG, Esporte..."
+                    maxlength="50"
+                    required
+                >
+            </div>
 
             <div class="campo">
-
-                <label for="descricao">
-                    📝 Descrição
-                </label>
+                <label for="descricao">📝 Descrição</label>
 
                 <textarea
                     id="descricao"
                     name="descricao"
                     placeholder="Digite uma descrição do jogo..."
                 ></textarea>
-
             </div>
 
-
             <div class="campo">
-
-                <label for="capa">
-                    🖼️ Capa do jogo
-                </label>
+                <label for="capa">🖼️ Capa do jogo</label>
 
                 <input
                     type="file"
@@ -335,30 +427,22 @@
                 >
 
                 <small>
-                    Escolha uma imagem para ser usada como capa do jogo.
+                    Escolha uma imagem para usar como capa do jogo.
+                    Esse campo é opcional.
                 </small>
-
             </div>
 
-
-            <button
-                type="submit"
-                class="btn-cadastrar"
-            >
-                ➕ Cadastrar jogo
+            <button type="submit" class="btn-cadastrar">
+                💾 Cadastrar jogo
             </button>
 
         </form>
 
     </div>
 
+    <!-- JOGOS CADASTRADOS -->
 
-    <!-- LISTA DE JOGOS -->
-
-    <h2 class="titulo-lista">
-        🎮 Jogos cadastrados
-    </h2>
-
+    <h2 class="titulo-lista">🎮 Jogos cadastrados</h2>
 
     {% if jogos %}
 
@@ -368,8 +452,7 @@
 
                 <div class="jogo-card">
 
-
-                    <!-- CAPA -->
+                    <!-- CAPA DO JOGO -->
 
                     {% if jogo.capa %}
 
@@ -387,37 +470,72 @@
 
                     {% endif %}
 
-
-                    <!-- INFORMAÇÕES -->
+                    <!-- INFORMAÇÕES DO JOGO -->
 
                     <div class="jogo-info">
 
-                        <h3>
-                            {{ jogo.nome }}
-                        </h3>
+                        <h3>{{ jogo.nome }}</h3>
 
+                        {% if jogo.genero %}
+                            <p class="genero-jogo">
+                                🎯 {{ jogo.genero }}
+                            </p>
+                        {% endif %}
 
                         {% if jogo.descricao %}
+                            <p>{{ jogo.descricao }}</p>
+                        {% else %}
+                            <p>Nenhuma descrição cadastrada.</p>
+                        {% endif %}
 
-                            <p>
-                                {{ jogo.descricao }}
-                            </p>
+                        <!-- OPÇÕES DE FAVORITOS -->
+
+                        {% if request.user.is_authenticated %}
+
+                            {% if jogo.id in favoritos_ids %}
+
+                                <form
+                                    method="POST"
+                                    action="{% url 'remover_favorito' jogo.id %}"
+                                    class="form-favorito"
+                                >
+                                    {% csrf_token %}
+
+                                    <input
+                                        type="hidden"
+                                        name="origem"
+                                        value="jogos"
+                                    >
+
+                                    <button
+                                        type="submit"
+                                        class="btn-favorito btn-remover"
+                                    >
+                                        💔 Remover dos favoritos
+                                    </button>
+                                </form>
+
+                            {% else %}
+
+                                <a
+                                    href="{% url 'adicionar_favorito' jogo.id %}"
+                                    class="btn-favorito"
+                                >
+                                    ⭐ Adicionar aos favoritos
+                                </a>
+
+                            {% endif %}
 
                         {% else %}
 
-                            <p>
-                                Nenhuma descrição cadastrada.
-                            </p>
+                            <a
+                                href="{% url 'login' %}"
+                                class="btn-favorito"
+                            >
+                                🔒 Entre para favoritar
+                            </a>
 
                         {% endif %}
-
-
-                        <a
-                            href="{% url 'adicionar_favorito' jogo.id %}"
-                            class="btn-favorito"
-                        >
-                            ⭐ Adicionar aos favoritos
-                        </a>
 
                     </div>
 
@@ -430,23 +548,37 @@
     {% else %}
 
         <div class="nenhum-jogo">
-
-            <h2>
-                🎮 Nenhum jogo cadastrado
-            </h2>
+            <h2>🎮 Nenhum jogo cadastrado</h2>
 
             <p>
-                Seja o primeiro a cadastrar um jogo!
+                Seja o primeiro a cadastrar um jogo para a comunidade!
             </p>
-
         </div>
 
     {% endif %}
 
-
 </div>
 
+<!-- SCRIPT DO BOTÃO -->
+
+<script>
+    const botaoCadastro = document.getElementById('btnAbrirCadastro');
+    const formularioCadastro = document.getElementById('formularioCadastro');
+
+    botaoCadastro.addEventListener('click', function () {
+        formularioCadastro.classList.toggle('aberto');
+
+        const estaAberto = formularioCadastro.classList.contains('aberto');
+
+        botaoCadastro.setAttribute('aria-expanded', estaAberto);
+
+        if (estaAberto) {
+            botaoCadastro.innerHTML = '✖ Fechar formulário';
+        } else {
+            botaoCadastro.innerHTML = '➕ Cadastrar novo jogo';
+        }
+    });
+</script>
+
 {% endblock %}
-
-
 

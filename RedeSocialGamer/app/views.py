@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-
+from django.views.decorators.http import require_POST
 from .models import *
 
 def inicio(request):
@@ -241,36 +241,22 @@ def adicionar_favorito(request, jogo_id):
 
 
 @login_required
+@require_POST
 def remover_favorito(request, jogo_id):
-
-    jogo = get_object_or_404(
-        Jogo,
-        id=jogo_id
-    )
-
     perfil = request.user.perfil
+    jogo = get_object_or_404(Jogo, id=jogo_id)
 
-    favorito = JogoFavorito.objects.filter(
+    JogoFavorito.objects.filter(
         perfil=perfil,
         jogo=jogo
-    ).first()
+    ).delete()
 
-    if favorito:
+    origem = request.POST.get('origem', 'jogos')
 
-        favorito.delete()
+    if origem == 'perfil':
+        return redirect('perfil', id=perfil.id)
 
-        perfil.pontos -= 2
-
-        if perfil.pontos < 0:
-            perfil.pontos = 0
-
-        perfil.nivel = (
-            perfil.pontos // 100
-        ) + 1
-
-        perfil.save()
-
-    return redirect('perfil', id=perfil.id)
+    return redirect('lista_jogos')
 
 
 @login_required
@@ -448,12 +434,14 @@ def buscar_jogadores(request):
 def cadastrar_jogo(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
+        genero = request.POST.get('genero', '').strip()
         descricao = request.POST.get('descricao')
         capa = request.FILES.get('capa')
 
         if nome:
             Jogo.objects.create(
                 nome=nome,
+                genero=genero,
                 descricao=descricao,
                 capa=capa
             )
@@ -461,3 +449,46 @@ def cadastrar_jogo(request):
         return redirect('lista_jogos')
 
     return redirect('lista_jogos')
+
+@login_required
+@require_POST
+def cancelar_amizade(request, amizade_id):
+    amizade = get_object_or_404(Amizade, id=amizade_id)
+    perfil_atual = request.user.perfil
+
+    if (
+        amizade.solicitante == perfil_atual
+        or amizade.destinatario == perfil_atual
+    ):
+        perfil_id = (
+            amizade.destinatario.id
+            if amizade.solicitante == perfil_atual
+            else amizade.solicitante.id
+        )
+
+        amizade.delete()
+
+        return redirect('perfil', id=perfil_id)
+
+    return redirect('perfil', id=perfil_atual.id)
+
+
+
+@login_required
+@require_POST
+def atualizar_bio(request):
+    perfil = request.user.perfil
+    perfil.bio = request.POST.get('bio', '').strip()
+    perfil.save(update_fields=['bio'])
+
+    return redirect('perfil', id=perfil.id)
+
+
+@login_required
+@require_POST
+def excluir_bio(request):
+    perfil = request.user.perfil
+    perfil.bio = ''
+    perfil.save(update_fields=['bio'])
+
+    return redirect('perfil', id=perfil.id)

@@ -114,6 +114,23 @@ urlpatterns = [
         'jogos/cadastrar/', 
         views.cadastrar_jogo, 
         name='cadastrar_jogo'),
+    path(
+        'amizade/<int:amizade_id>/cancelar/',
+        views.cancelar_amizade,
+        name='cancelar_amizade'
+    ),
+
+    path(
+        'perfil/bio/atualizar/',
+        views.atualizar_bio,
+        name='atualizar_bio'
+    ),
+
+    path(
+        'perfil/bio/excluir/',
+        views.excluir_bio,
+        name='excluir_bio'
+    ),
 ]
 if settings.DEBUG:
     urlpatterns += static(

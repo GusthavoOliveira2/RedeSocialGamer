@@ -1,537 +1,663 @@
 {% extends 'base.html' %}
 
-{% block title %}
-Perfil - {{ jogador.usuario.username }}
-{% endblock %}
+{% block title %}Perfil de {{ jogador.usuario.username }}{% endblock %}
 
 {% block content %}
 
-<div class="perfil-header">
+<style>
+    .perfil-container {
+        max-width: 1100px;
+        margin: 30px auto;
+        padding: 20px;
+        color: #f1f1f1;
+    }
 
-    {% if jogador.foto %}
+    .perfil-cabecalho {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 30px;
+        margin-bottom: 25px;
+        background: #171725;
+        border: 1px solid #34344d;
+        border-radius: 18px;
+    }
 
-        <img
-            src="{{ jogador.foto.url }}"
-            alt="Foto de {{ jogador.usuario.username }}"
-            class="foto-perfil"
-        >
+    .perfil-foto,
+    .perfil-foto-placeholder {
+        width: 150px;
+        height: 150px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        border: 4px solid #8b5cf6;
+        background: #25253a;
+    }
 
-    {% else %}
+    .perfil-foto {
+        object-fit: cover;
+    }
 
-        <div class="foto-perfil"></div>
+    .perfil-foto-placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 55px;
+    }
 
-    {% endif %}
+    .perfil-informacoes {
+        flex: 1;
+        min-width: 0;
+    }
 
+    .perfil-informacoes h1 {
+        color: #c4b5fd;
+        margin: 0 0 10px;
+        overflow-wrap: anywhere;
+    }
 
-    <div>
+    .perfil-nivel {
+        color: #facc15;
+        font-weight: bold;
+    }
 
-        <h1>
-            {{ jogador.usuario.username }}
-        </h1>
+    .perfil-pontos {
+        color: #c7c7d8;
+    }
 
+    .perfil-card {
+        padding: 25px;
+        margin-bottom: 25px;
+        background: #171725;
+        border: 1px solid #34344d;
+        border-radius: 15px;
+    }
+
+    .perfil-card h2 {
+        color: #c4b5fd;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #34344d;
+        font-size: 22px;
+    }
+
+    .btn-perfil {
+        display: inline-block;
+        padding: 10px 16px;
+        border: none;
+        border-radius: 8px;
+        background: #7c3aed;
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-perfil:hover {
+        background: #6d28d9;
+        color: white;
+    }
+
+    .btn-perigo {
+        background: #dc2626;
+    }
+
+    .btn-perigo:hover {
+        background: #b91c1c;
+    }
+
+    .btn-secundario {
+        background: #383850;
+    }
+
+    .btn-secundario:hover {
+        background: #4b4b68;
+    }
+
+    .bio-texto {
+        color: #e0e0ed;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .bio-form textarea {
+        width: 100%;
+        min-height: 100px;
+        box-sizing: border-box;
+        padding: 12px;
+        margin-bottom: 12px;
+        border: 1px solid #454563;
+        border-radius: 8px;
+        background: #10101c;
+        color: white;
+        resize: vertical;
+    }
+
+    .perfil-lista {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+    }
+
+    .perfil-item {
+        padding: 15px;
+        background: #222237;
+        border: 1px solid #383852;
+        border-radius: 10px;
+        overflow-wrap: anywhere;
+    }
+
+    .perfil-item h3 {
+        margin-top: 0;
+        color: #ddd6fe;
+        font-size: 17px;
+    }
+
+    .perfil-item p {
+        color: #c7c7d8;
+    }
+
+    .lista-jogos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 18px;
+    }
+
+    .jogo-card {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 15px;
+        min-width: 0;
+        background: #222237;
+        border: 1px solid #383852;
+        border-radius: 12px;
+    }
+
+    .capa-jogo,
+    .sem-capa {
+        width: 90px;
+        height: 110px;
+        flex-shrink: 0;
+        border-radius: 8px;
+        background: #303047;
+    }
+
+    .capa-jogo {
+        object-fit: cover;
+    }
+
+    .sem-capa {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 35px;
+    }
+
+    .jogo-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .jogo-info h3 {
+        margin: 0 0 8px;
+        color: #ddd6fe;
+        font-size: 17px;
+        overflow-wrap: anywhere;
+    }
+
+    .jogo-info .genero {
+        color: #a78bfa;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .jogo-info p {
+        color: #c7c7d8;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+    }
+
+    .publicacao {
+        padding: 18px;
+        margin-bottom: 18px;
+        background: #222237;
+        border: 1px solid #383852;
+        border-radius: 12px;
+    }
+
+    .publicacao-data {
+        color: #9999b3;
+        font-size: 12px;
+        margin-bottom: 12px;
+    }
+
+    .publicacao-texto {
+        color: #eeeeF8;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+    }
+
+    .publicacao-imagem {
+        display: block;
+        max-width: 100%;
+        max-height: 450px;
+        margin: 15px auto;
+        border-radius: 10px;
+        object-fit: contain;
+    }
+
+    .publicacao-acoes {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+    }
+
+    .comentarios {
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid #383852;
+    }
+
+    .comentario {
+        padding: 10px;
+        margin: 8px 0;
+        background: #171725;
+        border-radius: 8px;
+        overflow-wrap: anywhere;
+    }
+
+    .comentario strong {
+        color: #c4b5fd;
+    }
+
+    .comentario-form {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+    .comentario-form input {
+        flex: 1;
+        min-width: 0;
+        padding: 10px;
+        border: 1px solid #454563;
+        border-radius: 8px;
+        background: #10101c;
+        color: white;
+    }
+
+    .sem-conteudo {
+        padding: 15px;
+        color: #a5a5bd;
+        background: #222237;
+        border-radius: 8px;
+    }
+
+    .solicitacao-acoes {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+        .perfil-container {
+            padding: 10px;
+        }
+
+        .perfil-cabecalho {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .perfil-card {
+            padding: 16px;
+        }
+
+        .jogo-card {
+            gap: 10px;
+        }
+
+        .capa-jogo,
+        .sem-capa {
+            width: 70px;
+            height: 90px;
+        }
+
+        .comentario-form {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="perfil-container">
+
+    <!-- CABEÇALHO -->
+    <section class="perfil-cabecalho">
+
+        {% if jogador.foto %}
+            <img
+                src="{{ jogador.foto.url }}"
+                alt="Foto de {{ jogador.usuario.username }}"
+                class="perfil-foto"
+            >
+        {% else %}
+            <div class="perfil-foto-placeholder">👤</div>
+        {% endif %}
+
+        <div class="perfil-informacoes">
+            <h1>{{ jogador.usuario.username }}</h1>
+            <p class="perfil-nivel">⭐ Nível {{ jogador.nivel }}</p>
+            <p class="perfil-pontos">🏆 {{ jogador.pontos }} pontos</p>
+
+            {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+                <a href="{% url 'lista_jogos' %}" class="btn-perfil">
+                    🎮 Explorar jogos
+                </a>
+                <a href="{% url 'inicio' %}" class="btn-perfil btn-secundario">
+                    🏠 Página inicial
+                </a>
+            {% endif %}
+        </div>
+
+    </section>
+
+    <!-- BIOGRAFIA -->
+    <section class="perfil-card">
+        <h2>📝 Sobre mim</h2>
 
         {% if jogador.bio %}
-
-            <p class="bio">
-                {{ jogador.bio }}
-            </p>
-
+            <p class="bio-texto">{{ jogador.bio }}</p>
         {% else %}
-
-            <p class="bio">
+            <p class="sem-conteudo">
                 Este jogador ainda não adicionou uma biografia.
             </p>
-
         {% endif %}
 
+        {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+            <form method="post" action="{% url 'atualizar_bio' %}" class="bio-form">
+                {% csrf_token %}
 
-        <div class="stats">
+                <label for="bio">Escreva ou atualize sua biografia:</label>
 
-            <div class="stat">
-                ⭐ Nível:
-                <strong>
-                    {{ jogador.nivel }}
-                </strong>
-            </div>
+                <textarea
+                    id="bio"
+                    name="bio"
+                    maxlength="1000"
+                    placeholder="Conte um pouco sobre você..."
+                >{{ jogador.bio|default_if_none:"" }}</textarea>
 
-            <div class="stat">
-                🏆 Pontos:
-                <strong>
-                    {{ jogador.pontos }}
-                </strong>
-            </div>
+                <button type="submit" class="btn-perfil">
+                    💾 Salvar biografia
+                </button>
+            </form>
 
-            <div class="stat">
-                🎮 Jogos:
-                <strong>
-                    {{ jogos_favoritos.count }}
-                </strong>
-            </div>
+            {% if jogador.bio %}
+                <form method="post" action="{% url 'excluir_bio' %}" style="margin-top: 10px;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-perfil btn-perigo">
+                        🗑️ Excluir biografia
+                    </button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </section>
 
-            <div class="stat">
-                📝 Publicações:
-                <strong>
-                    {{ publicacoes.count }}
-                </strong>
-            </div>
+    <!-- SOLICITAÇÕES DE AMIZADE -->
+    {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+        <section class="perfil-card">
+            <h2>📨 Solicitações de amizade</h2>
 
-        </div>
+            {% if solicitacoes %}
+                <div class="perfil-lista">
+                    {% for solicitacao in solicitacoes %}
+                        <div class="perfil-item">
+                            <h3>{{ solicitacao.solicitante.usuario.username }}</h3>
+                            <p>Deseja adicionar você como amigo.</p>
 
-    </div>
+                            <div class="solicitacao-acoes">
+                                <form method="post" action="{% url 'aceitar_amizade' solicitacao.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-perfil">
+                                        Aceitar
+                                    </button>
+                                </form>
 
-</div>
-
-
-<!-- ADICIONAR AMIGO -->
-
-{% if user.is_authenticated %}
-
-    {% if user.perfil.id != jogador.id %}
-
-        <div style="margin: 20px 0;">
-
-            <a
-                href="{% url 'enviar_amizade' jogador.id %}"
-                class="btn"
-            >
-                👥 Adicionar amigo
-            </a>
-
-        </div>
-
+                                <form method="post" action="{% url 'recusar_amizade' solicitacao.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-perfil btn-perigo">
+                                        Recusar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="sem-conteudo">
+                    Você não possui solicitações pendentes.
+                </p>
+            {% endif %}
+        </section>
     {% endif %}
 
-{% endif %}
+    <!-- AMIGOS -->
+    <section class="perfil-card">
+        <h2>👥 Amigos</h2>
 
+        {% if amigos_enviados or amigos_recebidos %}
+            <div class="perfil-lista">
 
-<!-- SOLICITAÇÕES DE AMIZADE -->
+                {% for amizade in amigos_enviados %}
+                    {% if amizade.destinatario != jogador %}
+                        <div class="perfil-item">
+                            <h3>{{ amizade.destinatario.usuario.username }}</h3>
+                            <p>✅ Amizade aceita</p>
 
-{% if user.is_authenticated %}
+                            {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+                                <form method="post" action="{% url 'cancelar_amizade' amizade.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-perfil btn-perigo">
+                                        Remover amigo
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-    {% if user.perfil.id == jogador.id %}
+                {% for amizade in amigos_recebidos %}
+                    {% if amizade.solicitante != jogador %}
+                        <div class="perfil-item">
+                            <h3>{{ amizade.solicitante.usuario.username }}</h3>
+                            <p>✅ Amizade aceita</p>
 
-        <div class="card">
+                            {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+                                <form method="post" action="{% url 'cancelar_amizade' amizade.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-perfil btn-perigo">
+                                        Remover amigo
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-            <h2>
-                📨 Solicitações de amizade
-            </h2>
+            </div>
+        {% else %}
+            <p class="sem-conteudo">
+                Este jogador ainda não possui amigos adicionados.
+            </p>
+        {% endif %}
+    </section>
 
+    <!-- JOGOS FAVORITOS -->
+    <section class="perfil-card">
+        <h2>🎮 Jogos favoritos</h2>
 
-            {% for amizade in solicitacoes %}
+        {% if jogos_favoritos %}
+            <div class="lista-jogos">
 
-                <div class="comentario">
+                {% for jogo_favorito in jogos_favoritos %}
+                    <div class="jogo-card">
 
-                    <strong>
-                        {{ amizade.solicitante.usuario.username }}
-                    </strong>
+                        {% if jogo_favorito.jogo.capa %}
+                            <img
+                                src="{{ jogo_favorito.jogo.capa.url }}"
+                                alt="Capa de {{ jogo_favorito.jogo.nome }}"
+                                class="capa-jogo"
+                            >
+                        {% else %}
+                            <div class="sem-capa">🎮</div>
+                        {% endif %}
 
-                    <p>
-                        Enviou uma solicitação de amizade.
-                    </p>
+                        <div class="jogo-info">
+                            <h3>{{ jogo_favorito.jogo.nome }}</h3>
 
+                            {% if jogo_favorito.jogo.genero %}
+                                <p class="genero">
+                                    {{ jogo_favorito.jogo.genero }}
+                                </p>
+                            {% endif %}
 
-                    <div style="margin-top: 12px;">
+                            {% if jogo_favorito.jogo.descricao %}
+                                <p>{{ jogo_favorito.jogo.descricao }}</p>
+                            {% endif %}
 
-                        <a
-                            href="{% url 'aceitar_amizade' amizade.id %}"
-                            class="btn"
-                        >
-                            ✓ Aceitar
-                        </a>
+                            {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+                                <form
+                                    method="post"
+                                    action="{% url 'remover_favorito' jogo_favorito.jogo.id %}"
+                                    style="margin-top: 12px;"
+                                >
+                                    {% csrf_token %}
 
+                                    <input
+                                        type="hidden"
+                                        name="origem"
+                                        value="perfil"
+                                    >
 
-                        <a
-                            href="{% url 'recusar_amizade' amizade.id %}"
-                            class="btn btn-danger"
-                        >
-                            ✕ Recusar
-                        </a>
+                                    <button type="submit" class="btn-perfil btn-perigo">
+                                        💔 Remover dos favoritos
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
 
                     </div>
+                {% endfor %}
 
-                </div>
-
-
-            {% empty %}
-
-                <p>
-                    Nenhuma solicitação de amizade.
-                </p>
-
-            {% endfor %}
-
-        </div>
-
-    {% endif %}
-
-{% endif %}
-
-
-<!-- AMIGOS -->
-
-<div class="card">
-
-    <h2>
-        👥 Amigos
-    </h2>
-
-
-    {% for amizade in amigos_enviados %}
-
-        <div class="comentario">
-
-            <a
-                href="{% url 'perfil' amizade.destinatario.id %}"
-            >
-
-                <strong>
-                    {{ amizade.destinatario.usuario.username }}
-                </strong>
-
-            </a>
-
-        </div>
-
-    {% endfor %}
-
-
-    {% for amizade in amigos_recebidos %}
-
-        <div class="comentario">
-
-            <a
-                href="{% url 'perfil' amizade.solicitante.id %}"
-            >
-
-                <strong>
-                    {{ amizade.solicitante.usuario.username }}
-                </strong>
-
-            </a>
-
-        </div>
-
-    {% endfor %}
-
-
-    {% if not amigos_enviados and not amigos_recebidos %}
-
-        <p>
-            Este jogador ainda não possui amigos.
-        </p>
-
-    {% endif %}
-
-</div>
-
-
-<!-- JOGOS FAVORITOS -->
-
-<div class="card">
-
-    <h2>
-        🎮 Jogos Favoritos
-    </h2>
-
-
-    {% for favorito in jogos_favoritos %}
-
-        <div class="comentario">
-
-            <strong>
-                {{ favorito.jogo.nome }}
-            </strong>
-
-
-            <p style="color: #22d3ee; margin-top: 5px;">
-
-                {{ favorito.jogo.genero }}
-
+            </div>
+        {% else %}
+            <p class="sem-conteudo">
+                Este jogador ainda não adicionou jogos favoritos.
             </p>
 
-
-            {% if favorito.jogo.descricao %}
-
-                <p style="color: #aaaabd; margin-top: 5px;">
-
-                    {{ favorito.jogo.descricao }}
-
-                </p>
-
+            {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+                <a href="{% url 'lista_jogos' %}" class="btn-perfil">
+                    🎮 Explorar jogos
+                </a>
             {% endif %}
+        {% endif %}
+    </section>
 
+    <!-- PUBLICAÇÕES -->
+    <section class="perfil-card">
+        <h2>📢 Publicações</h2>
 
-            {% if user.is_authenticated %}
+        {% if publicacoes %}
+            {% for publicacao in publicacoes %}
+                <article class="publicacao">
 
-                {% if user.perfil.id == jogador.id %}
+                    <p class="publicacao-data">
+                        Publicado em {{ publicacao.data_criacao|date:"d/m/Y H:i" }}
+                    </p>
 
-                    <div style="margin-top: 10px;">
+                    <div class="publicacao-texto">{{ publicacao.conteudo }}</div>
 
-                        <a
-                            href="{% url 'remover_favorito' favorito.jogo.id %}"
-                            class="btn btn-danger"
+                    {% if publicacao.imagem %}
+                        <img
+                            src="{{ publicacao.imagem.url }}"
+                            alt="Imagem da publicação"
+                            class="publicacao-imagem"
                         >
-                            Remover
-                        </a>
+                    {% endif %}
 
+                    <div class="publicacao-acoes">
+                        <form method="post" action="{% url 'curtir_publicacao' publicacao.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-perfil">
+                                ❤️ Curtir
+                            </button>
+                        </form>
+
+                        {% if request.user.is_authenticated and request.user.id == jogador.usuario.id %}
+                            <form method="post" action="{% url 'excluir_publicacao' publicacao.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-perfil btn-perigo">
+                                    🗑️ Excluir publicação
+                                </button>
+                            </form>
+                        {% endif %}
                     </div>
 
-                {% endif %}
+                    <!-- COMENTÁRIOS -->
+                    <div class="comentarios">
+                        <h3>💬 Comentários</h3>
 
-            {% endif %}
+                        {% for comentario in publicacao.comentarios.all %}
+                            <div class="comentario">
+                                <strong>
+                                    {{ comentario.autor.usuario.username }}
+                                </strong>
+                                <p>{{ comentario.conteudo }}</p>
+                            </div>
+                        {% empty %}
+                            <p class="sem-conteudo">
+                                Nenhum comentário ainda.
+                            </p>
+                        {% endfor %}
 
-        </div>
+                        {% if request.user.is_authenticated %}
+                            <form
+                                method="post"
+                                action="{% url 'comentar_publicacao' publicacao.id %}"
+                                class="comentario-form"
+                            >
+                                {% csrf_token %}
 
+                                <input
+                                    type="text"
+                                    name="conteudo"
+                                    placeholder="Escreva um comentário..."
+                                    required
+                                >
 
-    {% empty %}
+                                <button type="submit" class="btn-perfil">
+                                    Enviar
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
 
-        <p>
-            Nenhum jogo favorito cadastrado.
-        </p>
-
-
-        {% if user.is_authenticated %}
-
-            {% if user.perfil.id == jogador.id %}
-
-                <div style="margin-top: 15px;">
-
-                    <a
-                        href="{% url 'lista_jogos' %}"
-                        class="btn"
-                    >
-                        🎮 Adicionar jogos
-                    </a>
-
-                </div>
-
-            {% endif %}
-
+                </article>
+            {% endfor %}
+        {% else %}
+            <p class="sem-conteudo">
+                Este jogador ainda não fez publicações.
+            </p>
         {% endif %}
-
-    {% endfor %}
+    </section>
 
 </div>
 
-
-<!-- PUBLICAÇÕES -->
-
-<h2>
-    📝 Publicações
-</h2>
-
-
-{% for publicacao in publicacoes %}
-
-    <div class="publicacao">
-
-
-        <div class="publicacao-header">
-
-            {% if jogador.foto %}
-
-                <img
-                    src="{{ jogador.foto.url }}"
-                    alt="Foto do jogador"
-                    class="avatar"
-                >
-
-            {% else %}
-
-                <div class="avatar"></div>
-
-            {% endif %}
-
-
-            <div>
-
-                <strong>
-                    {{ jogador.usuario.username }}
-                </strong>
-
-                <br>
-
-                <small>
-                    {{ publicacao.data_criacao|date:"d/m/Y H:i" }}
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <h2>
-            {{ publicacao.titulo }}
-        </h2>
-
-
-        <p class="publicacao-texto">
-            {{ publicacao.texto }}
-        </p>
-
-
-        {% if publicacao.imagem %}
-
-            <img
-                src="{{ publicacao.imagem.url }}"
-                alt="Imagem da publicação"
-                class="publicacao-imagem"
-            >
-
-        {% endif %}
-
-
-        <div class="acoes">
-
-            <span>
-                ❤️ {{ publicacao.curtidas.count }} curtidas
-            </span>
-
-            <span>
-                💬 {{ publicacao.comentarios.count }} comentários
-            </span>
-
-
-            {% if user.is_authenticated %}
-
-                <a
-                    href="{% url 'curtir' publicacao.id %}"
-                    class="btn"
-                >
-                    ❤️ Curtir
-                </a>
-
-            {% endif %}
-
-
-            {% if user.is_authenticated %}
-
-                {% if user.perfil.id == jogador.id %}
-
-                    <a
-                        href="{% url 'excluir_publicacao' publicacao.id %}"
-                        class="btn btn-danger"
-                    >
-                        🗑 Excluir
-                    </a>
-
-                {% endif %}
-
-            {% endif %}
-
-        </div>
-
-
-        <!-- COMENTÁRIOS -->
-
-        <div class="comentarios">
-
-            <h3>
-                💬 Comentários
-            </h3>
-
-
-            {% for comentario in publicacao.comentarios.all %}
-
-                <div class="comentario">
-
-                    <strong>
-                        {{ comentario.autor.usuario.username }}
-                    </strong>
-
-                    <p style="margin-top: 5px;">
-                        {{ comentario.texto }}
-                    </p>
-
-                    <small style="color: #77778d;">
-
-                        {{ comentario.data_criacao|date:"d/m/Y H:i" }}
-
-                    </small>
-
-                </div>
-
-
-            {% empty %}
-
-                <p>
-                    Nenhum comentário ainda.
-                </p>
-
-            {% endfor %}
-
-
-            <!-- FORMULÁRIO DE COMENTÁRIO -->
-
-            {% if user.is_authenticated %}
-
-                <form
-                    method="POST"
-                    action="{% url 'comentar' publicacao.id %}"
-                    style="margin-top: 15px;"
-                >
-
-                    {% csrf_token %}
-
-
-                    <input
-                        type="text"
-                        name="texto"
-                        placeholder="Escreva um comentário..."
-                        required
-                    >
-
-
-                    <button
-                        type="submit"
-                        class="btn"
-                    >
-                        Comentar
-                    </button>
-
-                </form>
-
-            {% endif %}
-
-        </div>
-
-    </div>
-
-
-{% empty %}
-
-    <div class="card">
-
-        <h2>
-            Nenhuma publicação
-        </h2>
-
-        <p>
-            Este jogador ainda não publicou nada.
-        </p>
-
-
-        {% if user.is_authenticated %}
-
-            {% if user.perfil.id == jogador.id %}
-
-                <div style="margin-top: 15px;">
-
-                    <a
-                        href="{% url 'criar_publicacao' %}"
-                        class="btn"
-                    >
-                        + Criar publicação
-                    </a>
-
-                </div>
-
-            {% endif %}
-
-        {% endif %}
-
-    </div>
-
-{% endfor %}
-
 {% endblock %}
+

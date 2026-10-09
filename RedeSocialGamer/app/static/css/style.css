@@ -378,3 +378,337 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   PÁGINA DE JOGOS
+======================================== */
+
+.jogos-container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+.cabecalho-jogos {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.cabecalho-jogos h1 {
+    color: #ffffff;
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+.cabecalho-jogos p {
+    color: #aaa;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+/* BOTÃO DE ABRIR CADASTRO */
+
+.btn-abrir-cadastro {
+    display: block;
+    margin: 0 auto 30px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-abrir-cadastro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+}
+
+/* FORMULÁRIO ESCONDIDO */
+
+.cadastro-jogo {
+    display: none;
+    background: #19142d;
+    border: 1px solid #39275e;
+    border-radius: 18px;
+    padding: 30px;
+    margin-bottom: 45px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+}
+
+.cadastro-jogo.aberto {
+    display: block;
+}
+
+.cadastro-jogo h2 {
+    color: #ffffff;
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+/* FORMULÁRIO */
+
+.formulario-jogo {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.campo-jogo {
+    margin-bottom: 20px;
+}
+
+.campo-jogo label {
+    display: block;
+    color: #ffffff;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.campo-jogo input[type="text"],
+.campo-jogo textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 13px;
+    margin-bottom: 0;
+    border-radius: 9px;
+    border: 1px solid #49376c;
+    background: #100d1c;
+    color: #ffffff;
+    font-size: 15px;
+    outline: none;
+}
+
+.campo-jogo input[type="text"]:focus,
+.campo-jogo textarea:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 8px rgba(139, 92, 246, 0.25);
+}
+
+.campo-jogo textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.campo-jogo input[type="file"] {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    margin-bottom: 0;
+    border-radius: 9px;
+    border: 1px dashed #63459a;
+    background: #100d1c;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.campo-jogo small {
+    display: block;
+    color: #888;
+    margin-top: 6px;
+}
+
+/* BOTÃO CADASTRAR */
+
+.btn-cadastrar {
+    border: none;
+    border-radius: 9px;
+    padding: 13px 22px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-cadastrar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+}
+
+/* LISTA DE JOGOS */
+
+.titulo-lista {
+    color: #ffffff;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.lista-jogos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 25px;
+}
+
+/* CARTÕES DOS JOGOS */
+
+.jogo-card {
+    background: #19142d;
+    border: 1px solid #39275e;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: 0.3s;
+    min-width: 0;
+}
+
+.jogo-card:hover {
+    transform: translateY(-5px);
+    border-color: #7c3aed;
+    box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+}
+
+.capa-jogo {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.sem-capa {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #100d1c;
+    color: #777;
+    font-size: 55px;
+}
+
+.jogo-info {
+    padding: 20px;
+}
+
+.jogo-info h3 {
+    color: #ffffff;
+    font-size: 21px;
+    margin: 0 0 12px;
+    overflow-wrap: anywhere;
+}
+
+.jogo-info p {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 8px 0;
+    overflow-wrap: anywhere;
+}
+
+.genero-jogo {
+    display: inline-block;
+    background: #352052;
+    color: #d8b4fe !important;
+    padding: 5px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px !important;
+}
+
+/* BOTÕES DE FAVORITOS */
+
+.form-favorito {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.btn-favorito {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 10px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #4c1d95;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-favorito:hover {
+    background: #6d28d9;
+}
+
+.btn-remover {
+    background: #7f1d1d;
+}
+
+.btn-remover:hover {
+    background: #b91c1c;
+}
+
+/* NENHUM JOGO CADASTRADO */
+
+.nenhum-jogo {
+    text-align: center;
+    background: #19142d;
+    border: 1px solid #39275e;
+    border-radius: 15px;
+    padding: 50px 20px;
+}
+
+.nenhum-jogo h2 {
+    color: #ffffff;
+}
+
+.nenhum-jogo p {
+    color: #999;
+    margin-top: 10px;
+}
+
+/* MENSAGENS */
+
+.mensagens {
+    margin-bottom: 25px;
+}
+
+.mensagem {
+    padding: 14px 18px;
+    border-radius: 9px;
+    margin-bottom: 10px;
+    color: #ffffff;
+    background: #352052;
+    border: 1px solid #63459a;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 700px) {
+    .jogos-container {
+        width: 94%;
+        margin: 25px auto;
+    }
+
+    .cabecalho-jogos h1 {
+        font-size: 30px;
+    }
+
+    .cadastro-jogo {
+        padding: 20px;
+    }
+
+    .lista-jogos {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-abrir-cadastro {
+        width: 100%;
+    }
+}
