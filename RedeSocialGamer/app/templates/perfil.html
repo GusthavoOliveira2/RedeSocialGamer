@@ -592,7 +592,7 @@
                     {% endif %}
 
                     <div class="publicacao-acoes">
-                        <form method="post" action="{% url 'curtir_publicacao' publicacao.id %}">
+                        <form method="post" action="{% url 'curtir' publicacao.id %}">
                             {% csrf_token %}
                             <button type="submit" class="btn-perfil">
                                 ❤️ Curtir
@@ -629,7 +629,7 @@
                         {% if request.user.is_authenticated %}
                             <form
                                 method="post"
-                                action="{% url 'comentar_publicacao' publicacao.id %}"
+                                action="{% url 'comentar' publicacao.id %}"
                                 class="comentario-form"
                             >
                                 {% csrf_token %}
