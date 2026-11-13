@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 
 {% block title %}
@@ -6,145 +7,440 @@ Encontrar Jogadores
 
 {% block content %}
 
-<div class="card">
+<style>
+    .buscar-container {
+        max-width: 1200px;
+        margin: 25px auto;
+        padding: 20px;
+    }
 
-<h1>🎮 Encontrar Jogadores</h1>
+    /* CABEÇALHO E PESQUISA */
+    .buscar-header {
+        position: relative;
+        overflow: hidden;
+        padding: 40px 30px;
+        margin-bottom: 35px;
+        text-align: center;
+        background:
+            radial-gradient(circle at top left, rgba(139, 92, 246, 0.20), transparent 45%),
+            radial-gradient(circle at bottom right, rgba(34, 211, 238, 0.12), transparent 40%),
+            #11111f;
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        border-radius: 20px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+    }
 
-<p>
-    Procure outros jogadores e envie uma solicitação de amizade.
-</p>
+    .buscar-header h1 {
+        margin: 0 0 12px;
+        font-size: 32px;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: 0.5px;
+    }
 
-<form method="GET" style="margin-top: 20px;">
+    .buscar-header h1 span {
+        color: #a78bfa;
+        text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+    }
 
-    <input
-        type="text"
-        name="busca"
-        value="{{ busca }}"
-        placeholder="Digite o nome do jogador..."
-        style="width: 70%;"
-    >
+    .buscar-header p {
+        color: #b8b8cc;
+        font-size: 15px;
+        margin-bottom: 25px;
+    }
 
-    <button
-        type="submit"
-        class="btn"
-    >
-        🔍 Buscar
-    </button>
+    .buscar-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        max-width: 650px;
+        margin: 0 auto;
+    }
 
-</form>
+    .buscar-form input {
+        flex: 1;
+        min-width: 0;
+        padding: 15px 18px;
+        color: #ffffff;
+        background: #0b0b14;
+        border: 1px solid #34344c;
+        border-radius: 12px;
+        outline: none;
+        font-size: 15px;
+        transition: 0.3s;
+    }
 
+    .buscar-form input::placeholder {
+        color: #77778e;
+    }
 
-</div>
+    .buscar-form input:focus {
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15),
+                    0 0 18px rgba(139, 92, 246, 0.15);
+    }
 
-{% if busca %}
+    .buscar-form button {
+        padding: 15px 22px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        white-space: nowrap;
+    }
 
+    .buscar-form button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    }
 
-<h2>
-    Resultados para: "{{ busca }}"
-</h2>
+    /* TÍTULO DOS RESULTADOS */
+    .resultados-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 30px 0 20px;
+    }
 
+    .resultados-header h2 {
+        color: #ffffff;
+        font-size: 23px;
+        margin: 0;
+    }
 
-{% else %}
+    .resultados-header h2 span {
+        color: #a78bfa;
+    }
 
+    .resultados-linha {
+        height: 3px;
+        width: 65px;
+        margin-top: 9px;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+    }
 
-<h2>
-    Jogadores
-</h2>
+    /* GRADE DE JOGADORES */
+    .jogadores-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 22px;
+        align-items: stretch;
+    }
 
+    .jogador-card {
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 28px 20px;
+        background: linear-gradient(145deg, #171728, #10101d);
+        border: 1px solid rgba(139, 92, 246, 0.18);
+        border-radius: 18px;
+        transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    }
 
-{% endif %}
+    .jogador-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #8b5cf6, #22d3ee);
+        opacity: 0.7;
+    }
 
-<div class="jogadores-grid">
+    .jogador-card:hover {
+        transform: translateY(-7px);
+        border-color: rgba(139, 92, 246, 0.65);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35),
+                    0 0 20px rgba(139, 92, 246, 0.12);
+    }
 
+    /* FOTO DO JOGADOR */
+    .jogador-card .foto-perfil {
+        width: 105px;
+        height: 105px;
+        min-height: 105px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 17px;
+        border: 3px solid #8b5cf6;
+        background: #25253a;
+        box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.12),
+                    0 0 22px rgba(139, 92, 246, 0.25);
+    }
 
-{% for jogador in jogadores %}
+    .jogador-card h2 {
+        color: #ffffff;
+        font-size: 20px;
+        margin: 0 0 12px;
+        overflow-wrap: anywhere;
+    }
 
-    <div class="card jogador-card">
+    .jogador-card p {
+        color: #b8b8cc;
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 7px 0;
+    }
 
-        {% if jogador.foto %}
+    .jogador-card p strong {
+        color: #22d3ee;
+    }
 
-            <img
-                src="{{ jogador.foto.url }}"
-                alt="Foto de {{ jogador.usuario.username }}"
-                class="foto-perfil"
-            >
+    .jogador-card .jogador-info {
+        width: 100%;
+        margin-top: 12px;
+        padding: 12px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 12px;
+    }
 
-        {% else %}
+    /* BOTÕES */
+    .jogador-acoes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        margin-top: auto;
+        padding-top: 20px;
+    }
 
-            <div class="foto-perfil"></div>
+    .jogador-acoes .btn {
+        flex: 1;
+        min-width: 110px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 13px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: 0.3s;
+    }
 
-        {% endif %}
+    .btn-perfil {
+        background: rgba(139, 92, 246, 0.17);
+        border-color: rgba(139, 92, 246, 0.4) !important;
+    }
 
+    .btn-perfil:hover {
+        background: #8b5cf6;
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.3);
+        transform: translateY(-2px);
+    }
 
-        <h2>
-            {{ jogador.usuario.username }}
-        </h2>
+    .btn-amizade {
+        background: rgba(34, 211, 238, 0.12);
+        border-color: rgba(34, 211, 238, 0.35) !important;
+    }
 
+    .btn-amizade:hover {
+        background: #0891b2;
+        box-shadow: 0 5px 15px rgba(34, 211, 238, 0.25);
+        transform: translateY(-2px);
+    }
 
-        {% if jogador.bio %}
+    /* NENHUM RESULTADO */
+    .nenhum-resultado {
+        grid-column: 1 / -1;
+        padding: 45px 20px;
+        text-align: center;
+        background: #151525;
+        border: 1px dashed rgba(139, 92, 246, 0.4);
+        border-radius: 18px;
+    }
 
-            <p>
-                {{ jogador.bio }}
-            </p>
+    .nenhum-resultado h2 {
+        color: #ffffff;
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
 
-        {% else %}
+    .nenhum-resultado p {
+        color: #a5a5ba;
+        margin: 0;
+    }
 
-            <p>
-                Este jogador ainda não possui uma biografia.
-            </p>
+    /* RESPONSIVIDADE */
+    @media (max-width: 600px) {
+        .buscar-container {
+            padding: 10px;
+        }
 
-        {% endif %}
+        .buscar-header {
+            padding: 30px 18px;
+        }
 
+        .buscar-header h1 {
+            font-size: 25px;
+        }
+
+        .buscar-form {
+            flex-direction: column;
+        }
+
+        .buscar-form input,
+        .buscar-form button {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .resultados-header h2 {
+            font-size: 20px;
+        }
+
+        .jogadores-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="buscar-container">
+
+    <div class="buscar-header">
+
+        <h1>🎮 Encontrar <span>Jogadores</span></h1>
 
         <p>
-            ⭐ Nível:
-            <strong>{{ jogador.nivel }}</strong>
+            Conheça novos jogadores, descubra perfis e aumente sua rede de amizades gamer!
         </p>
 
+        <form method="GET" class="buscar-form">
 
-        <p>
-            🏆 Pontos:
-            <strong>{{ jogador.pontos }}</strong>
-        </p>
-
-
-        <div style="margin-top: 15px;">
-
-            <a
-                href="{% url 'perfil' jogador.id %}"
-                class="btn"
+            <input
+                type="text"
+                name="busca"
+                value="{{ busca }}"
+                placeholder="Digite o nome do jogador..."
             >
-                👤 Ver perfil
-            </a>
 
+            <button type="submit">
+                🔍 Buscar
+            </button>
 
-            <a
-                href="{% url 'enviar_amizade' jogador.id %}"
-                class="btn"
-            >
-                👥 Adicionar amigo
-            </a>
+        </form>
 
+    </div>
+
+    {% if busca %}
+
+        <div class="resultados-header">
+            <div>
+                <h2>Resultados para: <span>"{{ busca }}"</span></h2>
+                <div class="resultados-linha"></div>
+            </div>
         </div>
 
+    {% else %}
+
+        <div class="resultados-header">
+            <div>
+                <h2>🌐 Jogadores da GameNet</h2>
+                <div class="resultados-linha"></div>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <div class="jogadores-grid">
+
+        {% for jogador in jogadores %}
+
+            <div class="card jogador-card">
+
+                {% if jogador.foto %}
+
+                    <img
+                        src="{{ jogador.foto.url }}"
+                        alt="Foto de {{ jogador.usuario.username }}"
+                        class="foto-perfil"
+                    >
+
+                {% else %}
+
+                    <div class="foto-perfil"></div>
+
+                {% endif %}
+
+                <h2>{{ jogador.usuario.username }}</h2>
+
+                {% if jogador.bio %}
+
+                    <p>{{ jogador.bio }}</p>
+
+                {% else %}
+
+                    <p>Este jogador ainda não possui uma biografia.</p>
+
+                {% endif %}
+
+                <div class="jogador-info">
+
+                    <p>
+                        ⭐ Nível:
+                        <strong>{{ jogador.nivel }}</strong>
+                    </p>
+
+                    <p>
+                        🏆 Pontos:
+                        <strong>{{ jogador.pontos }}</strong>
+                    </p>
+
+                </div>
+
+                <div class="jogador-acoes">
+
+                    <a
+                        href="{% url 'perfil' jogador.id %}"
+                        class="btn btn-perfil"
+                    >
+                        👤 Ver perfil
+                    </a>
+
+                    <a
+                        href="{% url 'enviar_amizade' jogador.id %}"
+                        class="btn btn-amizade"
+                    >
+                        👥 Adicionar
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="nenhum-resultado">
+
+                <h2>😕 Nenhum jogador encontrado</h2>
+
+                <p>
+                    Não encontramos nenhum jogador com esse nome.
+                    Tente pesquisar utilizando outro nome.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
     </div>
-
-{% empty %}
-
-    <div class="card">
-
-        <h2>
-            😕 Nenhum jogador encontrado
-        </h2>
-
-        <p>
-            Não encontramos nenhum jogador com esse nome.
-        </p>
-
-    </div>
-
-{% endfor %}
-
 
 </div>
 

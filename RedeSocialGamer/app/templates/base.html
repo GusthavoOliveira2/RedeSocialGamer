@@ -1,882 +1,873 @@
+
 {% load static %}
 
 <!DOCTYPE html>
-
 <html lang="pt-br">
 
 <head>
 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>
+        {% block title %}
+            GameNet - Rede Social Gamer
+        {% endblock %}
+    </title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-<title>
-    {% block title %}
-        Rede Social Gamer
-    {% endblock %}
-</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <style>
 
-<link
-    rel="stylesheet"
-    href="{% static 'css/style.css' %}"
->
+        :root {
+            --fundo: #0b0b14;
+            --fundo-secundario: #11111f;
+            --painel: #171728;
+            --painel-claro: #1e1e35;
 
+            --roxo: #8b5cf6;
+            --roxo-claro: #a78bfa;
+            --roxo-escuro: #6d28d9;
 
-<style>
+            --ciano: #22d3ee;
+            --texto: #f1f5f9;
+            --texto-secundario: #a5a5ba;
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+            --borda: rgba(139, 92, 246, 0.22);
+            --borda-ciano: rgba(34, 211, 238, 0.2);
 
+            --perigo: #ef4444;
+            --sucesso: #22c55e;
+        }
 
-    body {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        font-family: Arial, Helvetica, sans-serif;
+        html {
+            scroll-behavior: smooth;
+        }
 
-        background:
-            linear-gradient(
-                135deg,
-                #0f172a,
-                #111827,
-                #1e1b4b
+        body {
+            background: #080812;
+            isolation: isolate;
+            overflow-x: hidden;
+        }
+
+        /* FUNDO ANIMADO EM ONDAS */
+
+        .fundo-animado {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse at 15% 20%, rgba(139, 92, 246, 0.20), transparent 45%),
+                radial-gradient(ellipse at 85% 75%, rgba(34, 211, 238, 0.15), transparent 45%),
+                #080812;
+        }
+
+        .fundo-animado::before,
+        .fundo-animado::after {
+            content: "";
+            position: absolute;
+            width: 85vw;
+            height: 65vh;
+            border-radius: 50%;
+            filter: blur(65px);
+            opacity: 0.75;
+            will-change: transform;
+        }
+
+        .fundo-animado::before {
+            background: radial-gradient(
+                ellipse,
+                rgba(139, 92, 246, 0.75) 0%,
+                rgba(109, 40, 217, 0.35) 40%,
+                transparent 72%
             );
-
-        color: #f1f5f9;
-
-        min-height: 100vh;
-
-    }
-
-
-    /* NAVBAR */
-
-    nav {
-
-        width: 100%;
-
-        background: rgba(15, 23, 42, 0.95);
-
-        border-bottom:
-            1px solid
-            rgba(139, 92, 246, 0.4);
-
-        padding: 15px 40px;
-
-        display: flex;
-
-        align-items: center;
-
-        justify-content: space-between;
-
-        position: sticky;
-
-        top: 0;
-
-        z-index: 1000;
-
-        backdrop-filter: blur(10px);
-
-    }
-
-
-    .logo {
-
-        font-size: 24px;
-
-        font-weight: bold;
-
-        color: #a78bfa;
-
-        text-decoration: none;
-
-        white-space: nowrap;
-
-    }
-
-
-    .logo span {
-
-        color: #22d3ee;
-
-    }
-
-
-    .menu {
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 8px;
-
-    }
-
-
-    .menu a {
-
-        color: #e2e8f0;
-
-        text-decoration: none;
-
-        padding: 10px 14px;
-
-        border-radius: 8px;
-
-        transition: 0.2s;
-
-        font-size: 14px;
-
-    }
-
-
-    .menu a:hover {
-
-        background: #312e81;
-
-        color: white;
-
-    }
-
-
-    .menu .sair {
-
-        background: #dc2626;
-
-        color: white;
-
-    }
-
-
-    .menu .sair:hover {
-
-        background: #b91c1c;
-
-    }
-
-
-    /* CONTEÚDO */
-
-    main {
-
-        width: 90%;
-
-        max-width: 1200px;
-
-        margin: 40px auto;
-
-        min-height: calc(100vh - 150px);
-
-    }
-
-
-    /* CARDS */
-
-    .card {
-
-        background: rgba(30, 41, 59, 0.9);
-
-        border:
-
-            1px solid
-
-            rgba(139, 92, 246, 0.25);
-
-        border-radius: 15px;
-
-        padding: 25px;
-
-        margin-bottom: 25px;
-
-        box-shadow:
-            0 10px 30px
-            rgba(0, 0, 0, 0.25);
-
-    }
-
-
-    .card h1,
-    .card h2,
-    .card h3 {
-
-        margin-bottom: 15px;
-
-    }
-
-
-    /* BOTÕES */
-
-    .btn {
-
-        display: inline-block;
-
-        padding: 10px 16px;
-
-        border-radius: 8px;
-
-        border: none;
-
-        background: #7c3aed;
-
-        color: white;
-
-        text-decoration: none;
-
-        cursor: pointer;
-
-        font-weight: bold;
-
-        transition: 0.2s;
-
-    }
-
-
-    .btn:hover {
-
-        background: #6d28d9;
-
-        transform: translateY(-1px);
-
-    }
-
-
-    .btn-danger {
-
-        background: #dc2626;
-
-    }
-
-
-    .btn-danger:hover {
-
-        background: #b91c1c;
-
-    }
-
-
-    /* FORMULÁRIOS */
-
-    input,
-    textarea,
-    select {
-
-        width: 100%;
-
-        padding: 12px;
-
-        margin-top: 8px;
-
-        margin-bottom: 15px;
-
-        border-radius: 8px;
-
-        border:
-
-            1px solid
-            #475569;
-
-        background: #0f172a;
-
-        color: #f8fafc;
-
-        outline: none;
-
-    }
-
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-
-        border-color: #8b5cf6;
-
-    }
-
-
-    textarea {
-
-        min-height: 120px;
-
-        resize: vertical;
-
-    }
-
-
-    /* PERFIL */
-
-    .perfil-header {
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 25px;
-
-        background:
-            rgba(30, 41, 59, 0.9);
-
-        padding: 30px;
-
-        border-radius: 15px;
-
-        margin-bottom: 25px;
-
-        border:
-            1px solid
-            rgba(139, 92, 246, 0.25);
-
-    }
-
-
-    .foto-perfil {
-
-        width: 130px;
-
-        height: 130px;
-
-        border-radius: 50%;
-
-        object-fit: cover;
-
-        background:
-            linear-gradient(
-                135deg,
-                #7c3aed,
-                #06b6d4
+            top: -20%;
+            left: -20%;
+            animation: ondaRoxa 12s ease-in-out infinite alternate;
+        }
+
+        .fundo-animado::after {
+            background: radial-gradient(
+                ellipse,
+                rgba(34, 211, 238, 0.60) 0%,
+                rgba(8, 145, 178, 0.30) 40%,
+                transparent 72%
             );
-
-        flex-shrink: 0;
-
-    }
-
-
-    .avatar {
-
-        width: 50px;
-
-        height: 50px;
-
-        border-radius: 50%;
-
-        object-fit: cover;
-
-        background:
-            linear-gradient(
-                135deg,
-                #7c3aed,
-                #06b6d4
-            );
-
-    }
-
-
-    .bio {
-
-        color: #cbd5e1;
-
-        margin: 10px 0 20px 0;
-
-    }
-
-
-    .stats {
-
-        display: flex;
-
-        gap: 15px;
-
-        flex-wrap: wrap;
-
-    }
-
-
-    .stat {
-
-        background: #0f172a;
-
-        padding: 10px 15px;
-
-        border-radius: 8px;
-
-        color: #cbd5e1;
-
-    }
-
-
-    .stat strong {
-
-        color: #22d3ee;
-
-    }
-
-
-    /* PUBLICAÇÕES */
-
-    .publicacao {
-
-        background:
-            rgba(30, 41, 59, 0.9);
-
-        border-radius: 15px;
-
-        padding: 25px;
-
-        margin-bottom: 25px;
-
-        border:
-            1px solid
-            rgba(139, 92, 246, 0.2);
-
-    }
-
-
-    .publicacao-header {
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 12px;
-
-        margin-bottom: 20px;
-
-    }
-
-
-    .publicacao-header small {
-
-        color: #94a3b8;
-
-    }
-
-
-    .publicacao-texto {
-
-        color: #e2e8f0;
-
-        line-height: 1.7;
-
-        margin: 15px 0;
-
-    }
-
-
-    .publicacao-imagem {
-
-        width: 100%;
-
-        max-height: 500px;
-
-        object-fit: cover;
-
-        border-radius: 10px;
-
-        margin: 15px 0;
-
-    }
-
-
-    .acoes {
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 15px;
-
-        flex-wrap: wrap;
-
-        margin-top: 15px;
-
-        padding-top: 15px;
-
-        border-top:
-            1px solid
-            #334155;
-
-    }
-
-
-    /* COMENTÁRIOS */
-
-    .comentarios {
-
-        margin-top: 25px;
-
-        padding-top: 20px;
-
-        border-top:
-            1px solid
-            #334155;
-
-    }
-
-
-    .comentario {
-
-        background: #0f172a;
-
-        padding: 15px;
-
-        border-radius: 8px;
-
-        margin-top: 10px;
-
-    }
-
-
-    .comentario strong {
-
-        color: #a78bfa;
-
-    }
-
-
-    /* JOGADORES */
-
-    .jogadores-grid {
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(
-                auto-fit,
-                minmax(250px, 1fr)
-            );
-
-        gap: 20px;
-
-    }
-
-
-    .jogador-card {
-
-        text-align: center;
-
-    }
-
-
-    .jogador-card .foto-perfil {
-
-        margin: 0 auto 15px auto;
-
-    }
-
-
-    .jogador-card p {
-
-        color: #cbd5e1;
-
-        margin: 8px 0;
-
-    }
-
-
-    .jogador-card .btn {
-
-        margin: 5px;
-
-    }
-
-
-    /* TÍTULOS */
-
-    h1,
-    h2,
-    h3 {
-
-        color: #f8fafc;
-
-    }
-
-
-    h1 {
-
-        font-size: 32px;
-
-    }
-
-
-    h2 {
-
-        font-size: 24px;
-
-    }
-
-
-    /* LINKS */
-
-    a {
-
-        color: #22d3ee;
-
-    }
-
-
-    /* MENSAGENS */
-
-    .mensagem {
-
-        padding: 15px;
-
-        margin-bottom: 20px;
-
-        border-radius: 8px;
-
-        background: #1e293b;
-
-    }
-
-
-    /* RODAPÉ */
-
-    footer {
-
-        text-align: center;
-
-        padding: 25px;
-
-        margin-top: 40px;
-
-        color: #64748b;
-
-        border-top:
-            1px solid
-            rgba(139, 92, 246, 0.2);
-
-    }
-
-
-    /* RESPONSIVIDADE */
-
-    @media (max-width: 900px) {
+            bottom: -20%;
+            right: -20%;
+            animation: ondaCiano 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes ondaRoxa {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            50% {
+                transform: translate(35vw, 20vh) scale(1.3) rotate(25deg);
+            }
+            100% {
+                transform: translate(15vw, 35vh) scale(1.1) rotate(-15deg);
+            }
+        }
+
+        @keyframes ondaCiano {
+            0% {
+                transform: translate(0, 0) scale(1.1) rotate(0deg);
+            }
+            50% {
+                transform: translate(-35vw, -20vh) scale(1.35) rotate(-25deg);
+            }
+            100% {
+                transform: translate(-15vw, -35vh) scale(1) rotate(15deg);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fundo-animado::before,
+            .fundo-animado::after {
+                animation: none;
+            }
+        }
+
+        /* NAVBAR */
 
         nav {
-
-            flex-direction: column;
-
-            gap: 15px;
-
-            padding: 15px;
-
+            width: 100%;
+            background: rgba(17, 17, 31, 0.92);
+            border-bottom: 1px solid var(--borda);
+            padding: 15px 5%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
         }
 
+        .logo {
+            font-size: 25px;
+            font-weight: 800;
+            color: var(--roxo-claro);
+            text-decoration: none;
+            white-space: nowrap;
+            letter-spacing: -1px;
+            transition: 0.3s;
+        }
+
+        .logo span {
+            color: var(--ciano);
+        }
+
+        .logo:hover {
+            transform: scale(1.04);
+            text-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        }
 
         .menu {
-
+            display: flex;
+            align-items: center;
             justify-content: center;
-
             flex-wrap: wrap;
-
+            gap: 6px;
         }
-
-
-        .perfil-header {
-
-            flex-direction: column;
-
-            text-align: center;
-
-        }
-
-
-        .stats {
-
-            justify-content: center;
-
-        }
-
-    }
-
-
-    @media (max-width: 600px) {
-
-        main {
-
-            width: 94%;
-
-            margin: 25px auto;
-
-        }
-
 
         .menu a {
-
+            color: #d1d5e5;
+            text-decoration: none;
+            padding: 9px 13px;
+            border-radius: 9px;
+            transition: 0.25s;
             font-size: 13px;
-
-            padding: 8px 10px;
-
+            font-weight: 600;
+            white-space: nowrap;
         }
 
-
-        .perfil-header {
-
-            padding: 20px;
-
+        .menu a:hover {
+            background: rgba(139, 92, 246, 0.17);
+            color: white;
+            box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.25);
         }
 
-
-        .foto-perfil {
-
-            width: 100px;
-
-            height: 100px;
-
+        .menu .sair {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
         }
 
-
-        h1 {
-
-            font-size: 26px;
-
+        .menu .sair:hover {
+            background: #dc2626;
+            color: white;
         }
 
+        /* CONTEÚDO PRINCIPAL */
 
-        h2 {
-
-            font-size: 21px;
-
+        main {
+            width: 90%;
+            max-width: 1250px;
+            margin: 40px auto;
+            min-height: calc(100vh - 220px);
+            position: relative;
+            z-index: 1;
         }
 
+        /* CARDS */
+
+        .card {
+            background: linear-gradient(145deg, #19192b, #121220);
+            border: 1px solid var(--borda);
+            border-radius: 17px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .card h1,
+        .card h2,
+        .card h3 {
+            margin-bottom: 15px;
+        }
+
+        /* BOTÕES */
 
         .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 11px 17px;
+            border-radius: 9px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--roxo), var(--roxo-escuro));
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.25s;
+        }
 
+        .btn:hover {
+            background: linear-gradient(135deg, #9f7aea, #7c3aed);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #b91c1c);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #f87171, #dc2626);
+            box-shadow: 0 6px 18px rgba(239, 68, 68, 0.25);
+        }
+
+        /* FORMULÁRIOS */
+
+        input,
+        textarea,
+        select {
             width: 100%;
+            padding: 12px 14px;
+            margin-top: 8px;
+            margin-bottom: 15px;
+            border-radius: 9px;
+            border: 1px solid #35354d;
+            background: #0e0e1b;
+            color: var(--texto);
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            transition: 0.25s;
+        }
 
+        input::placeholder,
+        textarea::placeholder {
+            color: #77778e;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--roxo);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.13);
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            width: auto;
+            margin: 0 6px 0 0;
+            accent-color: var(--roxo);
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select option {
+            background: var(--fundo-secundario);
+            color: white;
+        }
+
+        label {
+            color: #d1d5e5;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* PERFIL */
+
+        .perfil-header {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            background: linear-gradient(145deg, #19192b, #121220);
+            padding: 30px;
+            border-radius: 17px;
+            margin-bottom: 25px;
+            border: 1px solid var(--borda);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .foto-perfil {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--roxo), var(--ciano));
+            border: 3px solid var(--roxo);
+            box-shadow: 0 0 0 5px rgba(139, 92, 246, 0.12),
+                        0 0 22px rgba(139, 92, 246, 0.2);
+            flex-shrink: 0;
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: linear-gradient(135deg, var(--roxo), var(--ciano));
+            border: 2px solid rgba(139, 92, 246, 0.5);
+        }
+
+        .bio {
+            color: #cbd5e1;
+            margin: 10px 0 20px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: #0e0e1b;
+            padding: 11px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--borda);
+            color: #cbd5e1;
+        }
+
+        .stat strong {
+            color: var(--ciano);
+        }
+
+        /* PUBLICAÇÕES */
+
+        .publicacao {
+            background: linear-gradient(145deg, #19192b, #121220);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid var(--borda);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+        }
+
+        .publicacao:hover {
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .publicacao-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .publicacao-header small {
+            color: #9292aa;
+        }
+
+        .publicacao-texto {
+            color: #e2e8f0;
+            line-height: 1.8;
+            margin: 15px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .publicacao-imagem {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid var(--borda);
+        }
+
+        .acoes {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #34344b;
+        }
+
+        /* COMENTÁRIOS */
+
+        .comentarios {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #34344b;
+        }
+
+        .comentario {
+            background: #10101e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border: 1px solid rgba(139, 92, 246, 0.12);
+        }
+
+        .comentario strong {
+            color: var(--roxo-claro);
+        }
+
+        /* JOGADORES */
+
+        .jogadores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .jogador-card {
             text-align: center;
+        }
+
+        .jogador-card .foto-perfil {
+            margin: 0 auto 15px;
+        }
+
+        .jogador-card p {
+            color: #cbd5e1;
+            margin: 8px 0;
+        }
+
+        .jogador-card .btn {
+            margin: 5px;
+        }
+
+        /* TÍTULOS E TEXTOS */
+
+        h1,
+        h2,
+        h3 {
+            color: #f8fafc;
+            line-height: 1.3;
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 19px;
+        }
+
+        p {
+            color: #cbd5e1;
+        }
+
+        a {
+            color: var(--ciano);
+            transition: 0.2s;
+        }
+
+        /* MENSAGENS */
+
+        .mensagem {
+            padding: 15px 18px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: rgba(139, 92, 246, 0.12);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #e9d5ff;
+        }
+
+        .mensagem.success {
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .mensagem.error {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .mensagem.warning {
+            background: rgba(234, 179, 8, 0.12);
+            border-color: rgba(234, 179, 8, 0.3);
+            color: #fde68a;
+        }
+
+        /* RODAPÉ */
+
+        footer {
+            text-align: center;
+            padding: 28px 15px;
+            margin-top: 40px;
+            color: #77778e;
+            border-top: 1px solid var(--borda);
+            background: rgba(17, 17, 31, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        footer p {
+            color: #85859d;
+            font-size: 13px;
+            margin: 4px 0;
+        }
+
+        /* BARRA DE ROLAGEM */
+
+        ::-webkit-scrollbar {
+            width: 9px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--fundo);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #514078;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--roxo);
+        }
+
+        /* RESPONSIVIDADE */
+
+        @media (max-width: 900px) {
+
+            nav {
+                flex-direction: column;
+                gap: 12px;
+                padding: 15px;
+            }
+
+            .menu {
+                justify-content: center;
+            }
+
+            .perfil-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .stats {
+                justify-content: center;
+            }
 
         }
 
-    }
+        @media (max-width: 600px) {
 
-</style>
+            main {
+                width: 94%;
+                margin: 25px auto;
+            }
 
+            nav {
+                position: relative;
+            }
+
+            .menu {
+                width: 100%;
+                gap: 5px;
+            }
+
+            .menu a {
+                font-size: 12px;
+                padding: 8px 9px;
+            }
+
+            .perfil-header {
+                padding: 20px;
+            }
+
+            .foto-perfil {
+                width: 105px;
+                height: 105px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            h2 {
+                font-size: 21px;
+            }
+
+            .card,
+            .publicacao {
+                padding: 18px;
+            }
+
+            .btn {
+                max-width: 100%;
+            }
+
+            .acoes {
+                gap: 8px;
+            }
+
+            .jogadores-grid {
+                grid-template-columns: 1fr;
+            }
+
+            /* IDENTIDADE VISUAL GAMENET */
+
+            :root {
+                --cor-fundo: #0f172a;
+                --cor-card: rgba(30, 41, 59, 0.92);
+                --cor-card-secundario: #17172b;
+                --cor-roxo: #8b5cf6;
+                --cor-roxo-claro: #a78bfa;
+                --cor-ciano: #22d3ee;
+                --cor-texto: #f1f5f9;
+                --cor-texto-secundario: #cbd5e1;
+                --cor-borda: rgba(139, 92, 246, 0.3);
+                --cor-perigo: #dc2626;
+            }
+
+            .card,
+            .perfil-card,
+            .publicacao,
+            .perfil-cabecalho {
+                background: linear-gradient(
+                    145deg,
+                    rgba(30, 41, 59, 0.96),
+                    rgba(23, 23, 43, 0.96)
+                );
+                border: 1px solid var(--cor-borda);
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+            }
+
+            .card,
+            .perfil-card,
+            .publicacao {
+                transition: border-color 0.25s, box-shadow 0.25s;
+            }
+
+            .card:hover,
+            .perfil-card:hover {
+                border-color: rgba(34, 211, 238, 0.35);
+            }
+
+            .btn,
+            .btn-perfil,
+            .btn-publicacao {
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 9px;
+                font-weight: bold;
+                transition: 0.25s ease;
+            }
+
+            .btn:hover,
+            .btn-perfil:hover,
+            .btn-publicacao:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 16px rgba(139, 92, 246, 0.25);
+            }
+
+            input,
+            textarea,
+            select {
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+            input:focus,
+            textarea:focus,
+            select:focus {
+                border-color: var(--cor-roxo);
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+            }
+
+            .mensagem {
+                border: 1px solid rgba(139, 92, 246, 0.35);
+                background: rgba(49, 46, 129, 0.35);
+                color: #e9d5ff;
+            }
+
+        }
+
+        /* DESATIVA ANIMAÇÕES SE O USUÁRIO PREFERIR MENOS MOVIMENTO */
+
+        @media (prefers-reduced-motion: reduce) {
+            .fundo-animado::before,
+            .fundo-animado::after {
+                animation: none;
+            }
+        }
+
+    </style>
+
+    {% block extra_css %}{% endblock %}
 
 </head>
 
 <body>
 
+    <!-- FUNDO ANIMADO -->
 
-<!-- MENU -->
+    <div class="fundo-animado"></div>
 
-<nav>
+    <!-- MENU -->
 
-    <a
-        href="{% url 'inicio' %}"
-        class="logo"
-    >
-        🎮 Game<span>Net</span>
-    </a>
+    <nav>
 
+        <a href="{% url 'inicio' %}" class="logo">
+            🎮 Game<span>Net</span>
+        </a>
 
-    {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
 
-        <div class="menu">
+            <div class="menu">
 
-            <a href="{% url 'inicio' %}">
-                🏠 Início
-            </a>
-
-
-            <a href="{% url 'lista_jogos' %}">
-                🎮 Jogos
-            </a>
-
-
-            <a href="{% url 'ranking' %}">
-                🏆 Ranking
-            </a>
-
-
-            <a href="{% url 'buscar_jogadores' %}">
-                👥 Encontrar Jogadores
-            </a>
-
-
-            {% if user.perfil %}
-                <a href="{% url 'perfil' user.perfil.id %}">
-                    👤 Meu Perfil
+                <a href="{% url 'inicio' %}">
+                    🏠 Início
                 </a>
-            {% endif %}
 
+                <a href="{% url 'lista_jogos' %}">
+                    🎮 Jogos
+                </a>
 
-            <a href="{% url 'criar_publicacao' %}">
-                ✏️ Publicar
-            </a>
+                <a href="{% url 'ranking' %}">
+                    🏆 Ranking
+                </a>
 
+                <a href="{% url 'buscar_jogadores' %}">
+                    👥 Encontrar Jogadores
+                </a>
 
-            <a
-                href="{% url 'logout' %}"
-                class="sair"
-            >
-                🚪 Sair
-            </a>
+                {% if user.perfil %}
+                    <a href="{% url 'perfil' user.perfil.id %}">
+                        👤 Meu Perfil
+                    </a>
+                {% endif %}
 
-        </div>
-
-    {% else %}
-
-        <div class="menu">
-
-            <a href="{% url 'login' %}">
-                🔑 Entrar
-            </a>
-
-
-            <a href="{% url 'cadastro' %}">
-                📝 Criar conta
-            </a>
-
-        </div>
-
-    {% endif %}
-
-</nav>
-
-
-<!-- CONTEÚDO -->
-
-<main>
-
-    {% if messages %}
-
-        {% for message in messages %}
-
-            <div class="mensagem">
-
-                {{ message }}
+                <a href="{% url 'logout' %}" class="sair">
+                    🚪 Sair
+                </a>
 
             </div>
 
-        {% endfor %}
+        {% else %}
 
-    {% endif %}
+            <div class="menu">
 
+                <a href="{% url 'login' %}">
+                    🔑 Entrar
+                </a>
 
-    {% block content %}
+                <a href="{% url 'cadastro' %}">
+                    📝 Criar conta
+                </a>
 
-    {% endblock %}
+            </div>
 
-</main>
+        {% endif %}
 
+    </nav>
 
-<!-- RODAPÉ -->
+    <!-- CONTEÚDO -->
 
-<footer>
+    <main>
 
-    <p>
-        🎮 Rede Social Gamer
-    </p>
+        {% if messages %}
 
-    <p>
-        Conecte-se, compartilhe e jogue.
-    </p>
+            {% for message in messages %}
 
-</footer>
+                <div class="mensagem {{ message.tags }}">
+                    {{ message }}
+                </div>
 
+            {% endfor %}
+
+        {% endif %}
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+    <!-- RODAPÉ -->
+
+    <footer>
+
+        <p>🎮 Rede Social Gamer</p>
+
+        <p>
+            Conecte-se, compartilhe e jogue.
+        </p>
+
+    </footer>
 
 </body>
 

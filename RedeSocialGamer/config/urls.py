@@ -131,6 +131,22 @@ urlpatterns = [
         views.excluir_bio,
         name='excluir_bio'
     ),
+    path(
+        'publicacao/<int:id>/editar/',
+        views.editar_publicacao,
+        name='editar_publicacao'
+    ),
+    path(
+    'jogo/<int:jogo_id>/editar/',
+    views.editar_jogo,
+    name='editar_jogo'
+),
+
+    path(
+        'jogo/<int:jogo_id>/excluir/',
+        views.excluir_jogo,
+        name='excluir_jogo'
+    ),
 ]
 if settings.DEBUG:
     urlpatterns += static(

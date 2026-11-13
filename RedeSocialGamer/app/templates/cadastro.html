@@ -1,32 +1,35 @@
-html
+
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %}Criar conta - GameNet{% endblock %}
 
+{% block extra_css %}
 <style>
-
     .cadastro-container {
         width: 100%;
         max-width: 500px;
-        margin: 50px auto;
+        box-sizing: border-box;
+        margin: 40px auto;
         padding: 35px;
-        background: rgba(25, 20, 45, 0.95);
-        border-radius: 20px;
-        box-shadow: 0 0 25px rgba(130, 70, 255, 0.35);
-        border: 1px solid rgba(150, 100, 255, 0.25);
+        background: linear-gradient(145deg, #171728, #21183b);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
     }
 
     .cadastro-container h1 {
         text-align: center;
-        margin-bottom: 10px;
-        color: #ffffff;
-        font-size: 32px;
+        margin: 0 0 10px;
+        color: #c4b5fd;
+        font-size: 30px;
+        font-weight: 800;
     }
 
     .cadastro-subtitulo {
         text-align: center;
-        color: #aaa;
+        color: #a5a5ba;
         margin-bottom: 30px;
+        line-height: 1.6;
     }
 
     .campo {
@@ -36,8 +39,9 @@ html
     .campo label {
         display: block;
         margin-bottom: 8px;
-        color: #ffffff;
+        color: #f1f5f9;
         font-weight: bold;
+        font-size: 14px;
     }
 
     .campo input[type="text"],
@@ -46,100 +50,128 @@ html
         width: 100%;
         padding: 13px;
         box-sizing: border-box;
-        border: 1px solid #4b3b70;
-        border-radius: 10px;
-        background: #171326;
-        color: white;
-        font-size: 15px;
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        border-radius: 9px;
+        background: #0b0b14;
+        color: #f1f5f9;
+        font-size: 14px;
         outline: none;
+        transition: 0.25s;
     }
 
-    .campo input[type="text"]:focus,
-    .campo input[type="email"]:focus,
-    .campo input[type="password"]:focus {
-        border-color: #9b5cff;
-        box-shadow: 0 0 8px rgba(155, 92, 255, 0.3);
+    .campo input:focus {
+        border-color: #22d3ee;
+        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
     }
 
     .campo input[type="file"] {
         width: 100%;
         padding: 12px;
         box-sizing: border-box;
-        border: 1px dashed #6d4db3;
-        border-radius: 10px;
-        background: #171326;
-        color: #ccc;
+        border: 1px dashed rgba(139, 92, 246, 0.5);
+        border-radius: 9px;
+        background: #0b0b14;
+        color: #cbd5e1;
         cursor: pointer;
     }
 
     .campo small {
         display: block;
-        margin-top: 7px;
-        color: #888;
+        margin-top: 8px;
+        color: #9999b3;
         font-size: 12px;
+        line-height: 1.5;
     }
+
+    /* PRÉ-VISUALIZAÇÃO DA FOTO */
 
     .preview-container {
         text-align: center;
-        margin: 20px 0;
+        margin: 22px 0;
     }
 
     .preview-container img {
-        width: 120px;
-        height: 120px;
+        width: 125px;
+        height: 125px;
         object-fit: cover;
         border-radius: 50%;
         border: 3px solid #8b5cf6;
-        box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 18px rgba(139, 92, 246, 0.3);
         display: none;
     }
 
+    /* BOTÃO CADASTRO */
+
     .botao-cadastro {
+        display: block;
         width: 100%;
         padding: 14px;
         border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
-        color: white;
-        font-size: 16px;
+        border-radius: 9px;
+        background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+        color: #ffffff;
+        font-size: 15px;
         font-weight: bold;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.25s ease;
     }
 
     .botao-cadastro:hover {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
         transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+        box-shadow: 0 6px 18px rgba(139, 92, 246, 0.3);
     }
+
+    /* LINK PARA LOGIN */
 
     .login-link {
         text-align: center;
         margin-top: 25px;
-        color: #aaa;
+        color: #a5a5ba;
+        font-size: 14px;
     }
 
     .login-link a {
-        color: #a855f7;
+        color: #22d3ee;
         text-decoration: none;
         font-weight: bold;
+        transition: 0.2s;
     }
 
     .login-link a:hover {
+        color: #67e8f9;
         text-decoration: underline;
     }
 
+    /* ERRO */
+
     .erro {
-        background: rgba(220, 38, 38, 0.15);
-        border: 1px solid #dc2626;
-        color: #ff6b6b;
+        background: rgba(220, 38, 38, 0.12);
+        border: 1px solid rgba(239, 68, 68, 0.5);
+        color: #fca5a5;
         padding: 12px;
-        border-radius: 10px;
+        border-radius: 9px;
         margin-bottom: 20px;
         text-align: center;
+        font-size: 14px;
     }
 
-</style>
+    /* RESPONSIVIDADE */
 
+    @media (max-width: 600px) {
+        .cadastro-container {
+            margin: 25px auto;
+            padding: 23px 18px;
+        }
+
+        .cadastro-container h1 {
+            font-size: 26px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
 
 <div class="cadastro-container">
 
@@ -147,8 +179,8 @@ html
 
     <p class="cadastro-subtitulo">
         Entre para a comunidade gamer!
+        Crie seu perfil e conecte-se com outros jogadores.
     </p>
-
 
     {% if erro %}
         <div class="erro">
@@ -156,14 +188,11 @@ html
         </div>
     {% endif %}
 
-
     <form method="POST" enctype="multipart/form-data">
 
         {% csrf_token %}
 
-
         <div class="campo">
-
             <label for="username">
                 👤 Nome de usuário
             </label>
@@ -175,12 +204,9 @@ html
                 placeholder="Digite seu nome de usuário"
                 required
             >
-
         </div>
 
-
         <div class="campo">
-
             <label for="email">
                 📧 E-mail
             </label>
@@ -192,12 +218,9 @@ html
                 placeholder="Digite seu e-mail"
                 required
             >
-
         </div>
 
-
         <div class="campo">
-
             <label for="senha">
                 🔒 Senha
             </label>
@@ -209,12 +232,9 @@ html
                 placeholder="Digite sua senha"
                 required
             >
-
         </div>
 
-
         <div class="campo">
-
             <label for="foto">
                 🖼️ Foto de perfil
             </label>
@@ -228,21 +248,17 @@ html
 
             <small>
                 Escolha uma imagem para usar como sua foto de perfil.
+                Esse campo é opcional.
             </small>
-
         </div>
 
-
         <div class="preview-container">
-
             <img
                 id="preview"
                 src="#"
                 alt="Pré-visualização da foto"
             >
-
         </div>
-
 
         <button
             type="submit"
@@ -253,53 +269,54 @@ html
 
     </form>
 
-
     <div class="login-link">
-
         Já possui uma conta?
 
         <a href="{% url 'login' %}">
             Entrar
         </a>
-
     </div>
 
 </div>
 
-
 <script>
-
     const foto = document.getElementById('foto');
     const preview = document.getElementById('preview');
 
-    foto.addEventListener('change', function() {
+    if (foto && preview) {
 
-        if (this.files && this.files[0]) {
+        foto.addEventListener('change', function() {
 
-            const arquivo = this.files[0];
+            if (this.files && this.files[0]) {
 
-            const leitor = new FileReader();
+                const arquivo = this.files[0];
 
-            leitor.onload = function(e) {
+                if (!arquivo.type.startsWith('image/')) {
+                    preview.src = '#';
+                    preview.style.display = 'none';
+                    this.value = '';
+                    return;
+                }
 
-                preview.src = e.target.result;
-                preview.style.display = 'inline-block';
+                const leitor = new FileReader();
 
-            };
+                leitor.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'inline-block';
+                };
 
-            leitor.readAsDataURL(arquivo);
+                leitor.readAsDataURL(arquivo);
 
-        } else {
+            } else {
 
-            preview.src = '#';
-            preview.style.display = 'none';
+                preview.src = '#';
+                preview.style.display = 'none';
 
-        }
+            }
 
-    });
+        });
 
+    }
 </script>
 
 {% endblock %}
-
-

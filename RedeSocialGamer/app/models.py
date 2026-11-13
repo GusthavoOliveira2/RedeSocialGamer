@@ -1,5 +1,8 @@
+
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Perfil(models.Model):
@@ -10,14 +13,18 @@ class Perfil(models.Model):
     pontos = models.IntegerField(default=0)
 
     def adicionar_pontos(self, quantidade):
-        self.pontos += quantidade
-
+        self.pontos = max(0, self.pontos + quantidade)
         self.nivel = (self.pontos // 100) + 1
-
         self.save()
 
     def __str__(self):
         return self.usuario.username
+
+
+@receiver(post_save, sender=User)
+def criar_perfil_usuario(sender, instance, created, **kwargs):
+    if created:
+        Perfil.objects.get_or_create(usuario=instance)
 
 
 class Jogo(models.Model):
@@ -25,6 +32,14 @@ class Jogo(models.Model):
     genero = models.CharField(max_length=50)
     descricao = models.TextField(blank=True, null=True)
     capa = models.ImageField(upload_to='jogos/', blank=True, null=True)
+
+    cadastrado_por = models.ForeignKey(
+        Perfil,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='jogos_cadastrados'
+    )
 
     def __str__(self):
         return self.nome
@@ -36,6 +51,7 @@ class JogoFavorito(models.Model):
         on_delete=models.CASCADE,
         related_name='jogos_favoritos'
     )
+
     jogo = models.ForeignKey(
         Jogo,
         on_delete=models.CASCADE,
@@ -55,6 +71,7 @@ class Amizade(models.Model):
         on_delete=models.CASCADE,
         related_name='amizades_enviadas'
     )
+
     destinatario = models.ForeignKey(
         Perfil,
         on_delete=models.CASCADE,
@@ -83,15 +100,22 @@ class Publicacao(models.Model):
         on_delete=models.CASCADE,
         related_name='publicacoes'
     )
+
     titulo = models.CharField(max_length=150)
     texto = models.TextField()
+
     imagem = models.ImageField(
         upload_to='publicacoes/',
         blank=True,
         null=True
     )
+
     data_criacao = models.DateTimeField(auto_now_add=True)
     data_atualizacao = models.DateTimeField(auto_now=True)
+
+    @property
+    def conteudo(self):
+        return self.texto
 
     def __str__(self):
         return self.titulo
@@ -103,13 +127,19 @@ class Comentario(models.Model):
         on_delete=models.CASCADE,
         related_name='comentarios'
     )
+
     autor = models.ForeignKey(
         Perfil,
         on_delete=models.CASCADE,
         related_name='comentarios'
     )
+
     texto = models.TextField()
     data_criacao = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def conteudo(self):
+        return self.texto
 
     def __str__(self):
         return f'{self.autor} - {self.publicacao}'
@@ -121,11 +151,13 @@ class Curtida(models.Model):
         on_delete=models.CASCADE,
         related_name='curtidas'
     )
+
     usuario = models.ForeignKey(
         Perfil,
         on_delete=models.CASCADE,
         related_name='curtidas'
     )
+
     data_criacao = models.DateTimeField(auto_now_add=True)
 
     class Meta:

@@ -1,61 +1,75 @@
+
 {% extends 'base.html' %}
 
-{% block content %}
+{% block title %}Jogos - GameNet{% endblock %}
 
+{% block extra_css %}
 <style>
+    /* CONTAINER */
     .jogos-container {
-        max-width: 1200px;
-        margin: 40px auto;
+        max-width: 1250px;
+        margin: 30px auto;
         padding: 0 20px;
     }
 
+    /* CABEÇALHO */
     .cabecalho-jogos {
-        text-align: center;
         margin-bottom: 30px;
+        padding: 25px;
+        background: linear-gradient(135deg, #17172b, #21183b);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 16px;
     }
 
     .cabecalho-jogos h1 {
-        color: #ffffff;
-        font-size: 38px;
-        margin-bottom: 10px;
+        color: #f1f5f9;
+        font-size: 34px;
+        margin: 0 0 10px;
+        font-weight: 800;
     }
 
     .cabecalho-jogos p {
-        color: #aaa;
-        font-size: 16px;
+        color: #a5a5ba;
+        font-size: 15px;
+        line-height: 1.7;
+        margin: 0;
     }
 
-    /* BOTÃO PARA ABRIR O CADASTRO */
-
+    /* BOTÃO ABRIR CADASTRO */
     .btn-abrir-cadastro {
-        display: block;
-        margin: 0 auto 30px;
-        padding: 14px 24px;
-        border: none;
-        border-radius: 10px;
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 17px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        border-radius: 12px;
+        background: linear-gradient(135deg, #6d28d9, #8b5cf6);
         color: #ffffff;
         font-size: 16px;
         font-weight: bold;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.3s ease;
     }
 
     .btn-abrir-cadastro:hover {
+        background: linear-gradient(135deg, #7c3aed, #a78bfa);
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+        box-shadow: 0 8px 22px rgba(139, 92, 246, 0.25);
     }
 
-    /* CADASTRO DE JOGOS */
-
+    /* FORMULÁRIO DE CADASTRO */
     .cadastro-jogo {
         display: none;
-        background: #19142d;
-        border: 1px solid #39275e;
-        border-radius: 18px;
-        padding: 30px;
-        margin-bottom: 45px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+        padding: 28px;
+        margin-bottom: 35px;
+        background: linear-gradient(145deg, #17172b, #21183b);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 16px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        animation: aparecer 0.3s ease;
     }
 
     .cadastro-jogo.aberto {
@@ -63,15 +77,15 @@
     }
 
     .cadastro-jogo h2 {
-        color: #ffffff;
-        margin-top: 0;
-        margin-bottom: 25px;
-        font-size: 24px;
+        color: #c4b5fd;
+        margin: 0 0 25px;
+        font-size: 23px;
     }
 
     .formulario-jogo {
         width: 100%;
         max-width: none;
+        margin: 0;
         padding: 0;
         background: transparent;
         border: none;
@@ -85,9 +99,9 @@
 
     .campo label {
         display: block;
-        color: #ffffff;
+        color: #f1f5f9;
         font-weight: bold;
-        margin-bottom: 8px;
+        margin-bottom: 9px;
     }
 
     .campo input[type="text"],
@@ -95,23 +109,24 @@
         width: 100%;
         box-sizing: border-box;
         padding: 13px;
-        margin-bottom: 0;
+        margin: 0;
         border-radius: 9px;
-        border: 1px solid #49376c;
-        background: #100d1c;
-        color: #ffffff;
-        font-size: 15px;
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        background: #0b0b14;
+        color: #f1f5f9;
+        font-size: 14px;
+        transition: 0.25s;
+    }
+
+    .campo input:focus,
+    .campo textarea:focus {
+        border-color: #22d3ee;
+        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
         outline: none;
     }
 
-    .campo input[type="text"]:focus,
-    .campo textarea:focus {
-        border-color: #8b5cf6;
-        box-shadow: 0 0 8px rgba(139, 92, 246, 0.25);
-    }
-
     .campo textarea {
-        min-height: 100px;
+        min-height: 110px;
         resize: vertical;
     }
 
@@ -119,118 +134,205 @@
         width: 100%;
         box-sizing: border-box;
         padding: 12px;
-        margin-bottom: 0;
+        margin: 0;
         border-radius: 9px;
-        border: 1px dashed #63459a;
-        background: #100d1c;
-        color: #aaa;
+        border: 1px dashed rgba(139, 92, 246, 0.5);
+        background: #0b0b14;
+        color: #a5a5ba;
         cursor: pointer;
     }
 
     .campo small {
         display: block;
-        color: #888;
-        margin-top: 6px;
+        color: #9999b3;
+        margin-top: 8px;
     }
 
-    /* BOTÃO DE CADASTRO */
-
+    /* BOTÕES */
     .btn-cadastrar {
+        display: inline-block;
+        padding: 13px 22px;
         border: none;
         border-radius: 9px;
-        padding: 13px 22px;
-        background: linear-gradient(135deg, #7c3aed, #a855f7);
+        background: linear-gradient(135deg, #7c3aed, #8b5cf6);
         color: #ffffff;
-        font-size: 15px;
+        font-size: 14px;
         font-weight: bold;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.25s ease;
     }
 
     .btn-cadastrar:hover {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
         transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(139, 92, 246, 0.35);
+        box-shadow: 0 5px 16px rgba(139, 92, 246, 0.25);
     }
 
-    /* LISTA DE JOGOS */
+    /* PESQUISA */
+    .pesquisa-jogos {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 35px;
+    }
+
+    .pesquisa-jogos input {
+        flex: 1;
+        min-width: 0;
+        padding: 14px 16px;
+        margin: 0;
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        border-radius: 10px;
+        background: #11111f;
+        color: #f1f5f9;
+        font-size: 14px;
+        outline: none;
+        transition: 0.25s;
+    }
+
+    .pesquisa-jogos input:focus {
+        border-color: #22d3ee;
+        box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1);
+    }
+
+    .pesquisa-jogos button,
+    .btn-limpar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .pesquisa-jogos button:hover,
+    .btn-limpar:hover {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        transform: translateY(-2px);
+        color: #ffffff;
+    }
+
+    .btn-limpar {
+        background: #303047;
+        border: 1px solid #454563;
+    }
+
+    .btn-limpar:hover {
+        background: #454563;
+    }
+
+    /* CABEÇALHO DA LISTAGEM */
+    .cabecalho-lista {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 22px;
+    }
 
     .titulo-lista {
-        color: #ffffff;
-        font-size: 28px;
-        margin-bottom: 25px;
+        color: #c4b5fd;
+        font-size: 25px;
+        margin: 0;
     }
 
+    .subtitulo-lista {
+        color: #9999b3;
+        font-size: 13px;
+    }
+
+    /* GRADE DE JOGOS */
     .lista-jogos {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-        gap: 25px;
+        gap: 22px;
+        align-items: start;
     }
 
-    /* CARDS */
-
+    /* CARD DE JOGO */
     .jogo-card {
-        background: #19142d;
-        border: 1px solid #39275e;
-        border-radius: 16px;
+        background: linear-gradient(145deg, #171728, #11111f);
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        border-radius: 15px;
         overflow: hidden;
-        transition: 0.3s;
+        transition: 0.3s ease;
         min-width: 0;
+        position: relative;
     }
 
     .jogo-card:hover {
         transform: translateY(-5px);
-        border-color: #7c3aed;
-        box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+        border-color: rgba(34, 211, 238, 0.5);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .capa-container {
+        position: relative;
+        overflow: hidden;
+        background: #0b0b14;
     }
 
     .capa-jogo {
         width: 100%;
-        height: 300px;
+        height: 290px;
         object-fit: cover;
         display: block;
+        transition: transform 0.4s ease;
+    }
+
+    .jogo-card:hover .capa-jogo {
+        transform: scale(1.04);
     }
 
     .sem-capa {
         width: 100%;
-        height: 300px;
+        height: 290px;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #100d1c;
-        color: #777;
-        font-size: 55px;
+        background: linear-gradient(145deg, #21183b, #11111f);
+        color: #8b5cf6;
+        font-size: 65px;
     }
 
+    /* INFORMAÇÕES */
     .jogo-info {
-        padding: 20px;
+        padding: 18px;
     }
 
     .jogo-info h3 {
-        color: #ffffff;
-        font-size: 21px;
+        color: #f1f5f9;
+        font-size: 19px;
         margin: 0 0 12px;
         overflow-wrap: anywhere;
     }
 
     .jogo-info p {
-        color: #aaa;
-        font-size: 14px;
-        line-height: 1.5;
-        margin: 8px 0;
+        color: #a5a5ba;
+        font-size: 13px;
+        line-height: 1.6;
+        margin: 9px 0;
         overflow-wrap: anywhere;
     }
 
     .genero-jogo {
         display: inline-block;
-        background: #352052;
-        color: #d8b4fe !important;
-        padding: 5px 10px;
-        border-radius: 6px;
-        margin-bottom: 8px !important;
+        background: rgba(139, 92, 246, 0.15);
+        color: #c4b5fd !important;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        padding: 6px 11px;
+        border-radius: 7px;
+        margin-bottom: 10px !important;
+        font-size: 12px !important;
+        font-weight: bold;
     }
 
-    /* BOTÕES DE FAVORITOS */
-
+    /* FAVORITOS */
     .form-favorito {
         width: 100%;
         max-width: none;
@@ -247,73 +349,194 @@
         width: 100%;
         box-sizing: border-box;
         text-align: center;
-        padding: 10px;
-        margin-top: 15px;
-        border: none;
-        border-radius: 8px;
-        background: #4c1d95;
+        padding: 12px;
+        margin-top: 12px;
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        border-radius: 9px;
+        background: linear-gradient(135deg, #6d28d9, #8b5cf6);
         color: #ffffff;
         text-decoration: none;
         font-weight: bold;
-        font-size: 14px;
+        font-size: 13px;
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.25s ease;
     }
 
     .btn-favorito:hover {
-        background: #6d28d9;
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 14px rgba(139, 92, 246, 0.2);
+        color: #ffffff;
     }
 
     .btn-remover {
-        background: #7f1d1d;
+        background: linear-gradient(135deg, #991b1b, #dc2626);
+        border-color: rgba(239, 68, 68, 0.5);
     }
 
     .btn-remover:hover {
-        background: #b91c1c;
+        background: linear-gradient(135deg, #b91c1c, #ef4444);
+    }
+
+    .status-favorito {
+        display: block;
+        margin-top: 13px;
+        color: #c4b5fd;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    /* EDITAR E EXCLUIR */
+    .btn-editar-jogo,
+    .btn-excluir-jogo {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px;
+        margin-top: 10px;
+        border: none;
+        border-radius: 9px;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 13px;
+        cursor: pointer;
+        transition: 0.25s ease;
+    }
+
+    .btn-editar-jogo {
+        background: #303f78;
+        border: 1px solid rgba(96, 165, 250, 0.3);
+    }
+
+    .btn-editar-jogo:hover {
+        background: #2563eb;
+        transform: translateY(-2px);
+    }
+
+    .btn-excluir-jogo {
+        background: #991b1b;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-excluir-jogo:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+    }
+
+    .aviso-administrador {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: rgba(139, 92, 246, 0.18);
+        color: #c4b5fd;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    /* FORMULÁRIO DE EDIÇÃO */
+    .form-edicao-jogo {
+        display: none;
+        margin-top: 17px;
+        padding: 17px;
+        background: #0b0b14;
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        border-radius: 11px;
+        animation: aparecer 0.3s ease;
+    }
+
+    .form-edicao-jogo.aberto {
+        display: block;
+    }
+
+    .form-edicao-jogo h3 {
+        color: #c4b5fd;
+        margin: 0 0 15px;
+        font-size: 17px;
+    }
+
+    .form-edicao-jogo label {
+        display: block;
+        color: #cbd5e1;
+        font-weight: bold;
+        margin-top: 12px;
+        font-size: 13px;
+    }
+
+    .form-edicao-jogo input,
+    .form-edicao-jogo textarea {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 11px;
+        margin: 7px 0 12px;
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 8px;
+        background: #171728;
+        color: #f1f5f9;
+        outline: none;
+    }
+
+    .form-edicao-jogo input:focus,
+    .form-edicao-jogo textarea:focus {
+        border-color: #22d3ee;
+    }
+
+    .form-edicao-jogo input[type="file"] {
+        font-size: 12px;
     }
 
     /* LISTA VAZIA */
-
     .nenhum-jogo {
         text-align: center;
-        background: #19142d;
-        border: 1px solid #39275e;
-        border-radius: 15px;
+        background: linear-gradient(145deg, #171728, #21183b);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-radius: 16px;
         padding: 50px 20px;
     }
 
+    .icone-vazio {
+        font-size: 55px;
+        margin-bottom: 15px;
+    }
+
     .nenhum-jogo h2 {
-        color: #ffffff;
+        color: #c4b5fd;
+        margin-bottom: 12px;
     }
 
     .nenhum-jogo p {
-        color: #999;
+        color: #a5a5ba;
+        line-height: 1.6;
+        margin-bottom: 20px;
     }
 
-    /* MENSAGENS */
+    /* ANIMAÇÕES */
+    @keyframes aparecer {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
 
-    .mensagens {
-        margin-bottom: 25px;
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    .mensagem {
-        padding: 14px 18px;
-        border-radius: 9px;
-        margin-bottom: 10px;
-        color: #ffffff;
-        background: #352052;
-        border: 1px solid #63459a;
-    }
-
-    /* TELAS MENORES */
-
-    @media (max-width: 600px) {
+    /* RESPONSIVIDADE */
+    @media (max-width: 700px) {
         .jogos-container {
             padding: 0 12px;
+            margin-top: 20px;
+        }
+
+        .cabecalho-jogos {
+            padding: 20px;
         }
 
         .cabecalho-jogos h1 {
-            font-size: 30px;
+            font-size: 28px;
         }
 
         .cadastro-jogo {
@@ -321,14 +544,56 @@
         }
 
         .lista-jogos {
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 15px;
+        }
+
+        .capa-jogo,
+        .sem-capa {
+            height: 230px;
+        }
+
+        .jogo-info {
+            padding: 15px;
+        }
+
+        .jogo-info h3 {
+            font-size: 17px;
+        }
+
+        .pesquisa-jogos {
+            flex-direction: column;
+        }
+
+        .pesquisa-jogos button,
+        .btn-limpar {
+            min-height: 44px;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .lista-jogos {
             grid-template-columns: 1fr;
         }
 
+        .capa-jogo,
+        .sem-capa {
+            height: 280px;
+        }
+
+        .cabecalho-lista {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
         .btn-abrir-cadastro {
-            width: 100%;
+            padding: 14px;
         }
     }
 </style>
+{% endblock %}
+
+{% block content %}
 
 <div class="jogos-container">
 
@@ -338,23 +603,47 @@
         <h1>🎮 Jogos</h1>
 
         <p>
-            Encontre seus jogos favoritos ou cadastre novos jogos para a comunidade.
+            Explore novos universos, encontre seus jogos favoritos
+            e compartilhe suas descobertas com a comunidade.
         </p>
     </div>
 
-    <!-- MENSAGENS DO SISTEMA -->
+    <!-- MENSAGENS -->
 
     {% if messages %}
         <div class="mensagens">
             {% for message in messages %}
-                <div class="mensagem">
+                <div class="mensagem {{ message.tags }}">
                     {{ message }}
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 
-    <!-- BOTÃO PARA ABRIR E FECHAR O FORMULÁRIO -->
+    <!-- PESQUISA -->
+
+    <form method="GET" action="{% url 'lista_jogos' %}" class="pesquisa-jogos">
+
+        <input
+            type="text"
+            name="busca"
+            value="{{ busca }}"
+            placeholder="🔎 Pesquisar jogo por nome ou gênero..."
+        >
+
+        <button type="submit">
+            🔎 Pesquisar
+        </button>
+
+        {% if busca %}
+            <a href="{% url 'lista_jogos' %}" class="btn-limpar">
+                ✖ Limpar
+            </a>
+        {% endif %}
+
+    </form>
+
+    <!-- BOTÃO CADASTRO -->
 
     <button
         type="button"
@@ -440,9 +729,12 @@
 
     </div>
 
-    <!-- JOGOS CADASTRADOS -->
+    <!-- LISTAGEM -->
 
-    <h2 class="titulo-lista">🎮 Jogos cadastrados</h2>
+    <div class="cabecalho-lista">
+        <h2 class="titulo-lista">🎮 Jogos cadastrados</h2>
+        <span class="subtitulo-lista">Explore a biblioteca da GameNet</span>
+    </div>
 
     {% if jogos %}
 
@@ -452,25 +744,29 @@
 
                 <div class="jogo-card">
 
-                    <!-- CAPA DO JOGO -->
+                    <!-- CAPA -->
 
-                    {% if jogo.capa %}
+                    <div class="capa-container">
 
-                        <img
-                            src="{{ jogo.capa.url }}"
-                            alt="Capa de {{ jogo.nome }}"
-                            class="capa-jogo"
-                        >
+                        {% if jogo.capa %}
 
-                    {% else %}
+                            <img
+                                src="{{ jogo.capa.url }}"
+                                alt="Capa de {{ jogo.nome }}"
+                                class="capa-jogo"
+                            >
 
-                        <div class="sem-capa">
-                            🎮
-                        </div>
+                        {% else %}
 
-                    {% endif %}
+                            <div class="sem-capa">
+                                🎮
+                            </div>
 
-                    <!-- INFORMAÇÕES DO JOGO -->
+                        {% endif %}
+
+                    </div>
+
+                    <!-- INFORMAÇÕES -->
 
                     <div class="jogo-info">
 
@@ -488,52 +784,147 @@
                             <p>Nenhuma descrição cadastrada.</p>
                         {% endif %}
 
-                        <!-- OPÇÕES DE FAVORITOS -->
+                        <!-- FAVORITOS -->
 
-                        {% if request.user.is_authenticated %}
+                        {% if jogo.id in favoritos_ids %}
 
-                            {% if jogo.id in favoritos_ids %}
+                            <span class="status-favorito">
+                                ⭐ Este jogo está nos seus favoritos!
+                            </span>
 
-                                <form
-                                    method="POST"
-                                    action="{% url 'remover_favorito' jogo.id %}"
-                                    class="form-favorito"
+                            <form
+                                method="POST"
+                                action="{% url 'remover_favorito' jogo.id %}"
+                                class="form-favorito"
+                            >
+                                {% csrf_token %}
+
+                                <input
+                                    type="hidden"
+                                    name="origem"
+                                    value="jogos"
                                 >
-                                    {% csrf_token %}
 
-                                    <input
-                                        type="hidden"
-                                        name="origem"
-                                        value="jogos"
-                                    >
-
-                                    <button
-                                        type="submit"
-                                        class="btn-favorito btn-remover"
-                                    >
-                                        💔 Remover dos favoritos
-                                    </button>
-                                </form>
-
-                            {% else %}
-
-                                <a
-                                    href="{% url 'adicionar_favorito' jogo.id %}"
-                                    class="btn-favorito"
+                                <button
+                                    type="submit"
+                                    class="btn-favorito btn-remover"
                                 >
-                                    ⭐ Adicionar aos favoritos
-                                </a>
-
-                            {% endif %}
+                                    💔 Desfavoritar jogo
+                                </button>
+                            </form>
 
                         {% else %}
 
+                            <span class="status-favorito">
+                                ☆ Este jogo ainda não está favoritado.
+                            </span>
+
                             <a
-                                href="{% url 'login' %}"
+                                href="{% url 'adicionar_favorito' jogo.id %}"
                                 class="btn-favorito"
                             >
-                                🔒 Entre para favoritar
+                                ⭐ Adicionar aos favoritos
                             </a>
+
+                        {% endif %}
+
+                        <!-- EDITAR E EXCLUIR -->
+
+                        {% if request.user.is_superuser or jogo.cadastrado_por_id == request.user.perfil.id %}
+
+                            {% if request.user.is_superuser %}
+                                <span class="aviso-administrador">
+                                    🛡️ Administração
+                                </span>
+                            {% endif %}
+
+                            <button
+                                type="button"
+                                class="btn-editar-jogo"
+                                onclick="alternarEdicao('{{ jogo.id }}')"
+                            >
+                                ✏️ Editar jogo
+                            </button>
+
+                            <form
+                                method="POST"
+                                action="{% url 'excluir_jogo' jogo.id %}"
+                                onsubmit="return confirm('Tem certeza que deseja excluir este jogo?');"
+                            >
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="btn-excluir-jogo"
+                                >
+                                    🗑️ Excluir jogo
+                                </button>
+                            </form>
+
+                            <!-- FORMULÁRIO DE EDIÇÃO -->
+
+                            <form
+                                method="POST"
+                                action="{% url 'editar_jogo' jogo.id %}"
+                                enctype="multipart/form-data"
+                                class="form-edicao-jogo"
+                                id="editar-jogo-{{ jogo.id }}"
+                            >
+                                {% csrf_token %}
+
+                                <h3>✏️ Editar jogo</h3>
+
+                                <label>Nome do jogo</label>
+
+                                <input
+                                    type="text"
+                                    name="nome"
+                                    value="{{ jogo.nome }}"
+                                    maxlength="100"
+                                    required
+                                >
+
+                                <label>Gênero</label>
+
+                                <input
+                                    type="text"
+                                    name="genero"
+                                    value="{{ jogo.genero }}"
+                                    maxlength="50"
+                                    required
+                                >
+
+                                <label>Descrição</label>
+
+                                <textarea
+                                    name="descricao"
+                                    rows="4"
+                                >{{ jogo.descricao }}</textarea>
+
+                                <label>Nova capa (opcional)</label>
+
+                                <input
+                                    type="file"
+                                    name="capa"
+                                    accept="image/*"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="btn-cadastrar"
+                                >
+                                    💾 Salvar alterações
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="btn-editar-jogo"
+                                    onclick="alternarEdicao('{{ jogo.id }}')"
+                                >
+                                    ✖ Cancelar
+                                </button>
+
+                            </form>
 
                         {% endif %}
 
@@ -548,37 +939,74 @@
     {% else %}
 
         <div class="nenhum-jogo">
-            <h2>🎮 Nenhum jogo cadastrado</h2>
 
-            <p>
-                Seja o primeiro a cadastrar um jogo para a comunidade!
-            </p>
+            <div class="icone-vazio">🎮</div>
+
+            <h2>Nenhum jogo encontrado</h2>
+
+            {% if busca %}
+
+                <p>
+                    Não encontramos jogos com o termo "{{ busca }}".
+                </p>
+
+                <a href="{% url 'lista_jogos' %}" class="btn-favorito">
+                    Ver todos os jogos
+                </a>
+
+            {% else %}
+
+                <p>
+                    Seja o primeiro a cadastrar um jogo para a comunidade!
+                </p>
+
+            {% endif %}
+
         </div>
 
     {% endif %}
 
 </div>
 
-<!-- SCRIPT DO BOTÃO -->
+<!-- JAVASCRIPT -->
 
 <script>
+    // ABRIR E FECHAR CADASTRO
+
     const botaoCadastro = document.getElementById('btnAbrirCadastro');
     const formularioCadastro = document.getElementById('formularioCadastro');
 
-    botaoCadastro.addEventListener('click', function () {
-        formularioCadastro.classList.toggle('aberto');
+    if (botaoCadastro && formularioCadastro) {
 
-        const estaAberto = formularioCadastro.classList.contains('aberto');
+        botaoCadastro.addEventListener('click', function () {
 
-        botaoCadastro.setAttribute('aria-expanded', estaAberto);
+            formularioCadastro.classList.toggle('aberto');
 
-        if (estaAberto) {
-            botaoCadastro.innerHTML = '✖ Fechar formulário';
-        } else {
-            botaoCadastro.innerHTML = '➕ Cadastrar novo jogo';
+            const estaAberto = formularioCadastro.classList.contains('aberto');
+
+            botaoCadastro.setAttribute('aria-expanded', estaAberto);
+
+            if (estaAberto) {
+                botaoCadastro.innerHTML = '✖ Fechar formulário';
+            } else {
+                botaoCadastro.innerHTML = '➕ Cadastrar novo jogo';
+            }
+
+        });
+
+    }
+
+    // ABRIR E FECHAR EDIÇÃO DE JOGOS
+
+    function alternarEdicao(id) {
+
+        const formulario = document.getElementById('editar-jogo-' + id);
+
+        if (formulario) {
+            formulario.classList.toggle('aberto');
         }
-    });
+
+    }
 </script>
 
 {% endblock %}
-
